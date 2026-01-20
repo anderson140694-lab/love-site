@@ -7,33 +7,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary-blue: #f0f7ff; --accent-blue: #3b82f6; --text-color: #333; }
-        body { font-family: -apple-system, sans-serif; background-color: var(--primary-blue); color: var(--text-color); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        body { font-family: -apple-system, sans-serif; background-color: var(--primary-blue); color: var(--text-color); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 50px; }
         #main-wrapper { display: none; width: 100%; flex-direction: column; align-items: center; }
-        .container { width: 90%; max-width: 400px; text-align: center; padding-top: 50px; }
+        .container { width: 90%; max-width: 400px; text-align: center; padding-top: 30px; }
         .sub-page { display: none; width: 90%; max-width: 400px; padding: 20px; text-align: left; box-sizing: border-box; }
-        .counter { background: white; margin: 30px 0; padding: 30px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .days-number { font-size: 3.5rem; color: #ff6b81; font-weight: bold; }
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
-        .menu-item { background: white; padding: 25px 10px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor: pointer; text-align: center; position: relative; }
-        .menu-item i { font-size: 2rem; color: var(--accent-blue); margin-bottom: 10px; }
-        .badge { position: absolute; top: -5px; right: -5px; background: #ff4757; color: white; font-size: 0.75rem; padding: 3px 8px; border-radius: 20px; font-weight: bold; border: 2px solid white; display: none; }
+        .counter { background: white; margin: 20px 0; padding: 25px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .days-number { font-size: 3rem; color: #ff6b81; font-weight: bold; }
         
-        /* 美化卡片 */
-        .list-card { 
-            background: white; border-radius: 18px; padding: 20px; margin-bottom: 20px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-left: 6px solid var(--accent-blue); 
-            position: relative;
-        }
-        .list-card b { font-size: 1.15rem; display: block; margin-bottom: 8px; padding-right: 30px; }
-        .list-card small { color: #888; display: block; }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; margin-bottom: 30px; }
+        .menu-item { background: white; padding: 20px 10px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor: pointer; text-align: center; position: relative; }
+        .menu-item i { font-size: 1.8rem; color: var(--accent-blue); margin-bottom: 8px; }
+        .menu-item div { font-size: 0.9rem; font-weight: 500; }
         
-        /* 刪除按鈕 */
-        .delete-btn { position: absolute; top: 15px; right: 15px; color: #ccc; cursor: pointer; transition: 0.2s; padding: 5px; }
+        .list-card { background: white; border-radius: 18px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-left: 6px solid var(--accent-blue); position: relative; }
+        .list-card b { font-size: 1.1rem; display: block; margin-bottom: 8px; padding-right: 30px; line-height: 1.4; }
+        .list-card small { color: #888; display: block; font-size: 0.85rem; }
+        
+        .delete-btn { position: absolute; top: 15px; right: 15px; color: #ddd; cursor: pointer; transition: 0.2s; padding: 5px; }
         .delete-btn:hover { color: #ff4757; }
 
-        .calendar-btn { display: inline-flex; align-items: center; margin-top: 12px; padding: 6px 12px; background: #f1f5f9; border-radius: 8px; text-decoration: none; color: #475569; font-size: 0.85rem; }
-        .back-btn { font-size: 1.1rem; cursor: pointer; margin-bottom: 20px; color: var(--accent-blue); display: flex; align-items: center; }
+        .calendar-btn { display: inline-flex; align-items: center; margin-top: 12px; padding: 8px 12px; background: #f8fafc; border-radius: 10px; text-decoration: none; color: #475569; font-size: 0.8rem; border: 1px solid #e2e8f0; }
+        .back-btn { font-size: 1.1rem; cursor: pointer; margin-bottom: 20px; color: var(--accent-blue); display: flex; align-items: center; font-weight: bold; }
         .fab { position: fixed; bottom: 30px; right: 30px; background: var(--accent-blue); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: none; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4); z-index: 100; }
+        
+        h2 i { margin-right: 10px; color: var(--accent-blue); }
     </style>
 </head>
 <body>
@@ -46,21 +43,47 @@
                 <p>DAYS</p>
             </div>
             <div class="menu-grid">
-                <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell"></i><div>提醒事項</div><span id="badge-reminders" class="badge">0</span></div>
-                <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star"></i><div>願望 & 目標</div><span id="badge-wishes" class="badge">0</span></div>
+                <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell"></i><div>提醒事項</div></div>
+                <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star"></i><div>願望 & 目標</div></div>
+                <div class="menu-item" onclick="showPage('food')"><i class="fas fa-utensils"></i><div>愛吃的</div></div>
+                <div class="menu-item" onclick="showPage('shortcoming')"><i class="fas fa-circle-exclamation"></i><div>缺點</div></div>
+                <div class="menu-item" style="grid-column: span 2;" onclick="showPage('merit')"><i class="fas fa-thumbs-up"></i><div>優點</div></div>
             </div>
         </div>
+
         <div id="reminders-page" class="sub-page">
             <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
-            <h2>提醒事項</h2>
-            <div id="reminder-list">讀取中...</div>
+            <h2><i class="fas fa-bell"></i>提醒事項</h2>
+            <div id="list-reminders">讀取中...</div>
             <button class="fab" onclick="addNewItem('提醒')"><i class="fas fa-plus"></i></button>
         </div>
+
         <div id="wishes-page" class="sub-page">
             <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
-            <h2>願望 & 目標</h2>
-            <div id="wish-list">讀取中...</div>
+            <h2><i class="fas fa-star"></i>願望 & 目標</h2>
+            <div id="list-wishes">讀取中...</div>
             <button class="fab" onclick="addNewItem('願望')"><i class="fas fa-plus"></i></button>
+        </div>
+
+        <div id="food-page" class="sub-page">
+            <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
+            <h2><i class="fas fa-utensils"></i>愛吃的</h2>
+            <div id="list-food">讀取中...</div>
+            <button class="fab" onclick="addNewItem('愛吃')"><i class="fas fa-plus"></i></button>
+        </div>
+
+        <div id="shortcoming-page" class="sub-page">
+            <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
+            <h2><i class="fas fa-circle-exclamation"></i>缺點</h2>
+            <div id="list-shortcoming">讀取中...</div>
+            <button class="fab" onclick="addNewItem('缺點')"><i class="fas fa-plus"></i></button>
+        </div>
+
+        <div id="merit-page" class="sub-page">
+            <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
+            <h2><i class="fas fa-thumbs-up"></i>優點</h2>
+            <div id="list-merit">讀取中...</div>
+            <button class="fab" onclick="addNewItem('優點')"><i class="fas fa-plus"></i></button>
         </div>
     </div>
 
@@ -83,52 +106,73 @@
     function showPage(id) {
         document.querySelectorAll('.container, .sub-page').forEach(p => p.style.display = 'none');
         document.getElementById(id + '-page').style.display = 'block';
+        window.scrollTo(0,0);
         if(id !== 'home') loadCloudData();
     }
 
     async function loadCloudData() {
-        const res = await fetch(SCRIPT_URL);
-        const data = await res.json();
-        const rList = document.getElementById('reminder-list');
-        const wList = document.getElementById('wish-list');
-        rList.innerHTML = ""; wList.innerHTML = "";
-
-        data.forEach(item => {
-            let card = `
-                <div class="list-card" id="item-${item.id}">
-                    <div class="delete-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></div>
-                    <b>${item.content}</b>
-                    <small>${item.date} ${item.time || ''}</small>`;
+        try {
+            const res = await fetch(SCRIPT_URL);
+            const data = await res.json();
             
-            if(item.category === '提醒') {
-                const cleanDate = item.date.replace(/-/g, '');
-                const ics = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ASUMMARY:${encodeURIComponent(item.content)}%0ADTSTART:${cleanDate}T090000Z%0ADTEND:${cleanDate}T100000Z%0AEND:VEVENT%0AEND:VCALENDAR`;
-                card += `<a href="${ics}" class="calendar-btn" download="event.ics"><i class="fas fa-calendar-check" style="color:#ef4444; margin-right:5px;"></i> 加入 Apple Calendar</a>`;
-            }
-            card += `</div>`;
-            if(item.category === '提醒') rList.innerHTML += card;
-            else wList.innerHTML += card;
-        });
+            const lists = {
+                '提醒': document.getElementById('list-reminders'),
+                '願望': document.getElementById('list-wishes'),
+                '愛吃': document.getElementById('list-food'),
+                '缺點': document.getElementById('list-shortcoming'),
+                '優點': document.getElementById('list-merit')
+            };
+            
+            Object.values(lists).forEach(l => { if(l) l.innerHTML = ""; });
+
+            data.forEach(item => {
+                const targetList = lists[item.category];
+                if(!targetList) return;
+
+                let card = `
+                    <div class="list-card" id="item-${item.id}">
+                        <div class="delete-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></div>
+                        <b>${item.content}</b>
+                        <small>${item.date} ${item.time || ''}</small>`;
+                
+                if(item.category === '提醒') {
+                    const cleanDate = item.date.replace(/-/g, '');
+                    const ics = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ASUMMARY:${encodeURIComponent(item.content)}%0ADTSTART:${cleanDate}T090000Z%0ADTEND:${cleanDate}T100000Z%0AEND:VEVENT%0AEND:VCALENDAR`;
+                    card += `<a href="${ics}" class="calendar-btn" download="event.ics"><i class="fas fa-calendar-check" style="color:#ef4444; margin-right:5px;"></i> 加入 Apple Calendar</a>`;
+                }
+                
+                card += `</div>`;
+                targetList.innerHTML += card;
+            });
+
+            Object.keys(lists).forEach(key => {
+                if(lists[key] && lists[key].innerHTML === "") lists[key].innerHTML = "<p style='color:#999; text-align:center;'>目前還沒有資料唷！</p>";
+            });
+        } catch(e) { console.error(e); }
     }
 
     async function deleteItem(id) {
-        if(!confirm("確定要刪除這條記錄嗎？")) return;
-        document.getElementById('item-' + id).style.opacity = "0.3";
+        if(!confirm("確定要刪除嗎？")) return;
+        const el = document.getElementById('item-' + id);
+        if(el) el.style.opacity = "0.3";
         await fetch(SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
             body: JSON.stringify({ action: "delete", id: id })
         });
-        alert("已刪除！請重新整理頁面。");
+        alert("已刪除！");
         loadCloudData();
     }
 
     async function addNewItem(type) {
-        const content = prompt("內容：");
+        const content = prompt("輸入" + type + "內容：");
         if (!content) return;
         const date = prompt("日期 (YYYY-MM-DD)：", new Date().toISOString().split('T')[0]);
-        let time = (type === '提醒') ? prompt("時間 (10:00)：", "09:00") : "";
+        let time = "";
+        if(type === '提醒') time = prompt("時間 (10:00)：", "09:00");
+
         if (content && date) {
+            alert("正在寫入雲端...");
             await fetch(SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
