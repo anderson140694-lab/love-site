@@ -5,66 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我們的小時光</title>
     <style>
-        :root {
-            --primary-color: #ffb6c1; /* 粉紅色調 */
-            --text-color: #555;
-        }
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fff5f7;
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .container {
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            padding: 20px;
-        }
-        .header img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 5px solid white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            object-fit: cover;
-        }
-        .counter {
-            background: white;
-            margin: 20px 0;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .days-number {
-            font-size: 3rem;
-            color: #ff6b81;
-            font-weight: bold;
-        }
-        .timeline {
-            text-align: left;
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-        }
-        .timeline h3 {
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 5px;
-        }
-        .event {
-            margin: 10px 0;
-            display: flex;
-            justify-content: space-between;
-        }
+        /* CSS：這裡負責網頁的「長相」，如顏色、大小、間距 */
+        :root { --primary-color: #ffb6c1; --text-color: #555; }
+        body { font-family: sans-serif; background-color: #fff5f7; color: var(--text-color); display: flex; flex-direction: column; align-items: center; margin: 0; }
+        
+        /* 初始隱藏內容，密碼正確後才顯示 */
+        #main-content { display: none; width: 90%; max-width: 400px; text-align: center; padding: 20px; }
+        
+        .header img { width: 120px; height: 120px; border-radius: 50%; border: 5px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); object-fit: cover; }
+        .counter { background: white; margin: 20px 0; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .days-number { font-size: 3rem; color: #ff6b81; font-weight: bold; }
+        .timeline { text-align: left; background: white; padding: 20px; border-radius: 20px; }
+        .event { margin: 10px 0; display: flex; justify-content: space-between; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div id="main-content">
     <div class="header">
         <br>
         <img src="https://via.placeholder.com/150" alt="我們的照片">
@@ -82,18 +39,24 @@
         <h3>重要紀念日</h3>
         <div class="event"><span>第一次見面</span> <span>2023-04-01</span></div>
         <div class="event"><span>正式交往</span> <span>2023-05-20</span></div>
-        <div class="event"><span>第一次旅行</span> <span>2023-12-25</span></div>
-    </div>
+        </div>
 </div>
 
 <script>
-    // 設定交往日期 (年, 月-1, 日)
-    const startDate = new Date(2023, 4, 20); // 2023年5月20日
+    // JavaScript：這裡負責網頁的「邏輯」，如密碼檢查、日期計算
+    
+    // 1. 密碼檢查功能
+    const password = prompt("請輸入我們的專屬密碼：");
+    if (password === "0528") {
+        document.getElementById('main-content').style.display = 'block'; // 密碼正確才顯示內容
+    } else {
+        alert("密碼錯誤，請重新整理頁面再試一次！");
+    }
+
+    // 2. 自動計算天數功能
+    const startDate = new Date(2023, 4, 20); // 這裡改你們的交往日 (年, 月-1, 日)
     const today = new Date();
-    
-    const diffTime = Math.abs(today - startDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-    
+    const diffDays = Math.ceil(Math.abs(today - startDate) / (1000 * 60 * 60 * 24)); 
     document.getElementById('days-count').innerText = diffDays;
 </script>
 
