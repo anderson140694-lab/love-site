@@ -2,100 +2,114 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>偲宸&柏鈞</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>偲宸 & 柏鈞</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <style>
-        :root { --primary-blue: #f0f7ff; --accent-blue: #3b82f6; --text-color: #333; }
-        body { font-family: -apple-system, sans-serif; background-color: var(--primary-blue); color: var(--text-color); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 50px; }
+        :root { --bj-blue: #3b82f6; --sc-pink: #f472b6; --bg-white: #ffffff; }
+        body { font-family: -apple-system, sans-serif; background-color: var(--bg-white); color: #333; margin: 0; padding-bottom: 50px; }
         #main-wrapper { display: none; width: 100%; flex-direction: column; align-items: center; }
-        .container { width: 90%; max-width: 400px; text-align: center; padding-top: 30px; }
-        .sub-page { display: none; width: 90%; max-width: 400px; padding: 20px; text-align: left; box-sizing: border-box; }
-        .counter { background: white; margin: 20px 0; padding: 25px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .days-number { font-size: 3rem; color: #ff6b81; font-weight: bold; }
         
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; margin-bottom: 30px; }
-        .menu-item { background: white; padding: 20px 10px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor: pointer; text-align: center; position: relative; }
-        .menu-item i { font-size: 1.8rem; color: var(--accent-blue); margin-bottom: 8px; }
-        .menu-item div { font-size: 0.9rem; font-weight: 500; }
+        /* 首頁樣式 */
+        .container { width: 90%; max-width: 400px; text-align: center; padding-top: 40px; }
+        .counter { background: #fff; margin: 20px 0; padding: 25px; border-radius: 30px; border: 1px solid #f0f0f0; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+        .days-number { font-size: 3.5rem; color: #ff6b81; font-weight: 800; letter-spacing: -2px; }
         
-        .list-card { background: white; border-radius: 18px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-left: 6px solid var(--accent-blue); position: relative; }
-        .list-card b { font-size: 1.1rem; display: block; margin-bottom: 8px; padding-right: 30px; line-height: 1.4; }
-        .list-card small { color: #888; display: block; font-size: 0.85rem; }
+        /* 選單圖示 (彩色化) */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
+        .menu-item { background: #fff; padding: 20px; border-radius: 22px; border: 1px solid #f5f5f5; box-shadow: 0 4px 15px rgba(0,0,0,0.04); cursor: pointer; text-align: center; }
+        .menu-item i.fa-bell { color: #ff9f43; } /* 橘色 */
+        .menu-item i.fa-star { color: #feca57; } /* 黃色 */
+        .menu-item i.fa-utensils { color: #ee5253; } /* 紅色 */
+        .menu-item i.fa-wrench { color: #54a0ff; } /* 藍色 */
+        .menu-item i.fa-thumbs-up { color: #1dd1a1; } /* 綠色 */
         
-        .delete-btn { position: absolute; top: 15px; right: 15px; color: #ddd; cursor: pointer; transition: 0.2s; padding: 5px; }
-        .delete-btn:hover { color: #ff4757; }
+        /* 卡片分色外框 */
+        .list-card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 15px; position: relative; border: 2px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .card-bj { border-color: var(--bj-blue); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15); } /* 柏鈞藍 */
+        .card-sc { border-color: var(--sc-pink); box-shadow: 0 4px 12px rgba(244, 114, 182, 0.15); } /* 偲宸粉 */
+        
+        .user-tag { position: absolute; top: -10px; right: 20px; font-size: 0.7rem; padding: 2px 10px; border-radius: 10px; color: white; font-weight: bold; }
+        .tag-bj { background: var(--bj-blue); }
+        .tag-sc { background: var(--sc-pink); }
 
-        .calendar-btn { display: inline-flex; align-items: center; margin-top: 12px; padding: 8px 12px; background: #f8fafc; border-radius: 10px; text-decoration: none; color: #475569; font-size: 0.8rem; border: 1px solid #e2e8f0; }
-        .back-btn { font-size: 1.1rem; cursor: pointer; margin-bottom: 20px; color: var(--accent-blue); display: flex; align-items: center; font-weight: bold; }
-        .fab { position: fixed; bottom: 30px; right: 30px; background: var(--accent-blue); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: none; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4); z-index: 100; }
-        
-        h2 i { margin-right: 10px; color: var(--accent-blue); }
+        /* 美食地圖篩選 */
+        .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+        .filter-btn { padding: 6px 15px; background: #f1f5f9; border-radius: 15px; font-size: 0.8rem; border: none; white-space: nowrap; }
+
+        /* 美化輸入彈出框 */
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; }
+        .modal-content { background:white; width:85%; max-width:350px; padding:25px; border-radius:25px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        input, select { width:100%; padding:14px; margin:10px 0; border:1px solid #eee; border-radius:15px; font-size:1rem; outline:none; box-sizing:border-box; background: #f8fafc; }
+        .btn-ok { width:100%; background: #333; color:white; border:none; padding:15px; border-radius:15px; font-weight:bold; margin-top:10px; }
+
+        .back-btn { font-size: 1.1rem; cursor: pointer; margin-bottom: 20px; color: #333; display: flex; align-items: center; font-weight: 600; }
+        .fab { position: fixed; bottom: 30px; right: 30px; background: #333; color: white; width: 60px; height: 60px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: none; z-index: 100; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
-    <div id="main-wrapper">
-        <div id="home-page" class="container">
-            <h1>偲宸 & 柏鈞</h1>
-            <div class="counter">
-                <p>我們已經在一起</p>
-                <div class="days-number" id="days-count">0</div>
-                <p>DAYS</p>
-            </div>
-            <div class="menu-grid">
-                <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell"></i><div>提醒事項</div></div>
-                <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star"></i><div>願望 & 目標</div></div>
-                <div class="menu-item" onclick="showPage('food')"><i class="fas fa-utensils"></i><div>愛吃的</div></div>
-                <div class="menu-item" onclick="showPage('shortcoming')"><i class="fas fa-circle-exclamation"></i><div>缺點</div></div>
-                <div class="menu-item" style="grid-column: span 2;" onclick="showPage('merit')"><i class="fas fa-thumbs-up"></i><div>優點</div></div>
-            </div>
-        </div>
 
-        <div id="reminders-page" class="sub-page">
-            <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
-            <h2><i class="fas fa-bell"></i>提醒事項</h2>
-            <div id="list-reminders">讀取中...</div>
-            <button class="fab" onclick="addNewItem('提醒')"><i class="fas fa-plus"></i></button>
+<div id="main-wrapper">
+    <div id="home-page" class="container">
+        <h1 style="font-weight: 800; font-size: 1.8rem;">偲宸 & 柏鈞</h1>
+        <div class="counter">
+            <p style="margin:0; font-size: 0.9rem; color: #888;">在一起第</p>
+            <div class="days-number" id="days-count">0</div>
+            <p style="margin:0; font-weight: 600;">DAYS</p>
         </div>
-
-        <div id="wishes-page" class="sub-page">
-            <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
-            <h2><i class="fas fa-star"></i>願望 & 目標</h2>
-            <div id="list-wishes">讀取中...</div>
-            <button class="fab" onclick="addNewItem('願望')"><i class="fas fa-plus"></i></button>
-        </div>
-
-        <div id="food-page" class="sub-page">
-            <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
-            <h2><i class="fas fa-utensils"></i>愛吃的</h2>
-            <div id="list-food">讀取中...</div>
-            <button class="fab" onclick="addNewItem('愛吃')"><i class="fas fa-plus"></i></button>
-        </div>
-
-        <div id="shortcoming-page" class="sub-page">
-            <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
-            <h2><i class="fas fa-circle-exclamation"></i>缺點</h2>
-            <div id="list-shortcoming">讀取中...</div>
-            <button class="fab" onclick="addNewItem('缺點')"><i class="fas fa-plus"></i></button>
-        </div>
-
-        <div id="merit-page" class="sub-page">
-            <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
-            <h2><i class="fas fa-thumbs-up"></i>優點</h2>
-            <div id="list-merit">讀取中...</div>
-            <button class="fab" onclick="addNewItem('優點')"><i class="fas fa-plus"></i></button>
+        <div class="menu-grid">
+            <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell"></i><div>提醒事項</div></div>
+            <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star"></i><div>願望</div></div>
+            <div class="menu-item" onclick="showPage('food')"><i class="fas fa-utensils"></i><div>想吃/去的</div></div>
+            <div class="menu-item" onclick="showPage('improve')"><i class="fas fa-wrench"></i><div>改善</div></div>
+            <div class="menu-item" style="grid-column: span 2;" onclick="showPage('merit')"><i class="fas fa-thumbs-up"></i><div>優點</div></div>
         </div>
     </div>
 
+    <div id="sub-page-container" class="sub-page" style="display:none; width:90%; max-width:400px; padding:20px;">
+        <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
+        <h2 id="page-title" style="margin-bottom: 20px;"></h2>
+        <div id="page-filters" class="filter-bar" style="display:none;"></div>
+        <div id="list-content">讀取中...</div>
+        <button class="fab" onclick="openModal()"><i class="fas fa-plus"></i></button>
+    </div>
+</div>
+
+<div id="inputModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modal-title" style="margin-top:0;">新增紀錄</h3>
+        <label style="font-size:0.8rem; color:#666;">是誰要新增：</label>
+        <select id="input-user">
+            <option value="柏鈞">柏鈞</option>
+            <option value="偲宸">偲宸</option>
+        </select>
+        <input type="text" id="input-content" placeholder="內容...">
+        <div id="date-fields" style="display:none;">
+            <input type="date" id="input-date">
+            <input type="time" id="input-time" value="09:00">
+        </div>
+        <button class="btn-ok" onclick="submitData()">確定新增</button>
+        <button style="width:100%; background:none; border:none; color:#999; margin-top:10px;" onclick="closeModal()">取消</button>
+    </div>
+</div>
+
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4fiWVeD7oB_l45JUSdKXUfjnl7EKZ6ZyA3bJEnoxpbLn2_6FhpbBs7W9f85rtR1U/exec";
+    // 已更新為你最新的 URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7EMK3nVZIyxTYnx8O8-WnkuB-3BQrUi1oC_zy0l2T-vdDVAHjufdES0uxV1SzmIsa/exec";
+    const MAP_URL = "https://www.google.com/maps/search/?api=1&query="; // 基本 Google Map 搜尋連結
+    let currentPage = "";
 
     function init() {
-        if (sessionStorage.getItem('isLogged') === 'true') { document.getElementById('main-wrapper').style.display = 'flex'; } 
-        else {
-            let pass = prompt("請輸入密碼");
-            if (pass === "0528") { sessionStorage.setItem('isLogged', 'true'); document.getElementById('main-wrapper').style.display = 'flex'; } 
-            else { alert("密碼錯誤！"); window.location.reload(); }
+        if (sessionStorage.getItem('isLogged') === 'true') {
+            document.getElementById('main-wrapper').style.display = 'flex';
+        } else {
+            let pass = prompt("請輸入密碼 0528");
+            if (pass === "0528") {
+                sessionStorage.setItem('isLogged', 'true');
+                document.getElementById('main-wrapper').style.display = 'flex';
+            } else { location.reload(); }
         }
     }
     init();
@@ -104,83 +118,86 @@
     document.getElementById('days-count').innerText = Math.floor((new Date() - startDate) / 86400000);
 
     function showPage(id) {
-        document.querySelectorAll('.container, .sub-page').forEach(p => p.style.display = 'none');
-        document.getElementById(id + '-page').style.display = 'block';
-        window.scrollTo(0,0);
-        if(id !== 'home') loadCloudData();
+        currentPage = id;
+        document.getElementById('home-page').style.display = (id === 'home') ? 'block' : 'none';
+        document.getElementById('sub-page-container').style.display = (id === 'home') ? 'none' : 'block';
+        if(id !== 'home') {
+            const titles = { reminders:'提醒事項', wishes:'願望', food:'想吃/去的', improve:'改善', merit:'優點' };
+            document.getElementById('page-title').innerText = titles[id];
+            loadCloudData();
+        }
     }
 
     async function loadCloudData() {
+        const listContainer = document.getElementById('list-content');
+        listContainer.innerHTML = "同步中...";
         try {
             const res = await fetch(SCRIPT_URL);
             const data = await res.json();
+            listContainer.innerHTML = "";
             
-            const lists = {
-                '提醒': document.getElementById('list-reminders'),
-                '願望': document.getElementById('list-wishes'),
-                '愛吃': document.getElementById('list-food'),
-                '缺點': document.getElementById('list-shortcoming'),
-                '優點': document.getElementById('list-merit')
-            };
-            
-            Object.values(lists).forEach(l => { if(l) l.innerHTML = ""; });
+            const catMap = { reminders:'提醒', wishes:'願望', food:'愛吃', improve:'改善', merit:'優點' };
+            const filtered = data.filter(i => i.category === catMap[currentPage]);
 
-            data.forEach(item => {
-                const targetList = lists[item.category];
-                if(!targetList) return;
-
-                let card = `
-                    <div class="list-card" id="item-${item.id}">
-                        <div class="delete-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></div>
-                        <b>${item.content}</b>
-                        <small>${item.date} ${item.time || ''}</small>`;
+            filtered.forEach(item => {
+                const userClass = item.user === '柏鈞' ? 'card-bj' : 'card-sc';
+                const tagClass = item.user === '柏鈞' ? 'tag-bj' : 'tag-sc';
                 
-                if(item.category === '提醒') {
+                let card = `
+                    <div class="list-card ${userClass}">
+                        <span class="user-tag ${tagClass}">${item.user}</span>
+                        <div style="position:absolute; top:15px; right:15px; color:#ddd;" onclick="deleteItem(${item.id})"><i class="fas fa-trash"></i></div>
+                        <b>${item.content}</b>
+                        ${item.date ? `<small><i class="far fa-calendar-alt"></i> ${item.date} ${item.time || ''}</small>` : ''}`;
+
+                if(currentPage === 'reminders' && item.date) {
                     const cleanDate = item.date.replace(/-/g, '');
                     const ics = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ASUMMARY:${encodeURIComponent(item.content)}%0ADTSTART:${cleanDate}T090000Z%0ADTEND:${cleanDate}T100000Z%0AEND:VEVENT%0AEND:VCALENDAR`;
-                    card += `<a href="${ics}" class="calendar-btn" download="event.ics"><i class="fas fa-calendar-check" style="color:#ef4444; margin-right:5px;"></i> 加入 Apple Calendar</a>`;
+                    card += `<br><a href="${ics}" download="event.ics" style="color:var(--bj-blue); font-size:0.8rem; text-decoration:none; display:inline-block; margin-top:10px;"><i class="fas fa-calendar-plus"></i> 加入 Apple Calendar</a>`;
                 }
-                
-                card += `</div>`;
-                targetList.innerHTML += card;
-            });
 
-            Object.keys(lists).forEach(key => {
-                if(lists[key] && lists[key].innerHTML === "") lists[key].innerHTML = "<p style='color:#999; text-align:center;'>目前還沒有資料唷！</p>";
+                if(currentPage === 'food') {
+                    card += `<br><a href="${MAP_URL}${encodeURIComponent(item.content)}" target="_blank" style="color:#ee5253; font-size:0.8rem; text-decoration:none; display:inline-block; margin-top:10px;"><i class="fas fa-map-marked-alt"></i> 在地圖中查看</a>`;
+                }
+
+                card += `</div>`;
+                listContainer.innerHTML += card;
             });
-        } catch(e) { console.error(e); }
+            if(filtered.length === 0) listContainer.innerHTML = "<p style='color:#ccc; text-align:center;'>目前空空如也...</p>";
+        } catch(e) { listContainer.innerHTML = "讀取失敗，請確認 Google Script 部署。"; }
+    }
+
+    function openModal() {
+        document.getElementById('inputModal').style.display = 'flex';
+        document.getElementById('date-fields').style.display = (currentPage === 'reminders') ? 'block' : 'none';
+        document.getElementById('input-content').value = "";
+    }
+    function closeModal() { document.getElementById('inputModal').style.display = 'none'; }
+
+    async function submitData() {
+        const user = document.getElementById('input-user').value;
+        const content = document.getElementById('input-content').value;
+        const date = document.getElementById('input-date').value;
+        const time = document.getElementById('input-time').value;
+        const catMap = { reminders:'提醒', wishes:'願望', food:'愛吃', improve:'改善', merit:'優點' };
+
+        if(!content) return alert("請輸入內容！");
+        closeModal();
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify({ category: catMap[currentPage], content, date, time, user })
+        });
+        setTimeout(loadCloudData, 1500); // 延遲 1.5 秒等 Google 寫入
     }
 
     async function deleteItem(id) {
         if(!confirm("確定要刪除嗎？")) return;
-        const el = document.getElementById('item-' + id);
-        if(el) el.style.opacity = "0.3";
         await fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
+            method: "POST", mode: "no-cors",
             body: JSON.stringify({ action: "delete", id: id })
         });
-        alert("已刪除！");
-        loadCloudData();
-    }
-
-    async function addNewItem(type) {
-        const content = prompt("輸入" + type + "內容：");
-        if (!content) return;
-        const date = prompt("日期 (YYYY-MM-DD)：", new Date().toISOString().split('T')[0]);
-        let time = "";
-        if(type === '提醒') time = prompt("時間 (10:00)：", "09:00");
-
-        if (content && date) {
-            alert("正在寫入雲端...");
-            await fetch(SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({ category: type, content: content, date: date, time: time })
-            });
-            alert("新增成功！");
-            loadCloudData();
-        }
+        setTimeout(loadCloudData, 1000);
     }
 </script>
 </body>
