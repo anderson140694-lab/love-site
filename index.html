@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我們的小時光</title>
+    <title>偲宸&柏鈞</title>
     <style>
-        /* 1. 背景改為淡藍色 */
         :root { 
-            --primary-blue: #e3f2fd; /* 淡藍色背景 */
-            --accent-blue: #2196f3;  /* 深藍色強調 */
+            --primary-blue: #e3f2fd; 
+            --accent-blue: #2196f3;  
             --text-color: #333; 
         }
         
@@ -23,7 +22,6 @@
             height: 100vh;
         }
         
-        /* 初始隱藏內容 */
         #main-content { 
             display: none; 
             width: 90%; 
@@ -32,15 +30,13 @@
             padding: 20px; 
         }
         
-        .header img { 
-            width: 120px; height: 120px; border-radius: 50%; 
-            border: 5px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-            object-fit: cover; margin-top: 20px;
+        .header {
+            margin-top: 50px;
         }
 
         .counter { 
             background: rgba(255, 255, 255, 0.8); 
-            margin: 30px 0; padding: 30px 20px; 
+            margin: 30px 0; padding: 40px 20px; 
             border-radius: 20px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
         }
@@ -51,7 +47,6 @@
             font-weight: bold; 
         }
 
-        /* 4. 【點擊進入】按鈕樣式 */
         .enter-btn {
             background-color: var(--accent-blue);
             color: white;
@@ -63,8 +58,6 @@
             box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
             transition: transform 0.2s;
             margin-top: 20px;
-            text-decoration: none;
-            display: inline-block;
         }
 
         .enter-btn:active {
@@ -76,7 +69,6 @@
 
 <div id="main-content">
     <div class="header">
-        <img src="https://via.placeholder.com/150" alt="我們的照片">
         <h1>偲宸 & 柏鈞</h1>
         <p>自 2025 年 5 月 28 日起</p>
     </div>
@@ -91,26 +83,23 @@
 </div>
 
 <script>
-    // 密碼檢查
-    const password = prompt("請輸入我們的專屬密碼：");
+    // 2. 密碼提示語修改
+    const password = prompt("請輸入密碼");
     if (password === "0528") {
         document.getElementById('main-content').style.display = 'block';
     } else {
         alert("密碼錯誤！");
     }
 
-    // 3. 計算 2025/05/28 開始的天數
-    // 月份 4 代表 5 月 (JS 月份由 0 開始)
+    // 日期計算邏輯
     const startDate = new Date(2025, 4, 28); 
     const today = new Date();
     const diffTime = today - startDate;
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
     document.getElementById('days-count').innerText = diffDays;
 
-    // 5. 點擊進入後的動作 (先預留位置)
     function enterNextPage() {
         alert("即將進入選項頁面...（等候你告訴我下一步要加什麼內容！）");
-        // 以後要在這裡寫跳轉到選項的程式碼
     }
 </script>
 
