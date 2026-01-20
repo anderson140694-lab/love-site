@@ -5,174 +5,167 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>偲宸 & 柏鈞</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <style>
-        :root { --bj-blue: #3b82f6; --sc-pink: #f472b6; --bg-white: #ffffff; }
-        body { font-family: -apple-system, sans-serif; background-color: var(--bg-white); color: #333; margin: 0; padding-bottom: 50px; }
+        :root { --bj-blue: #0095f6; --sc-pink: #fd5d93; --threads-gray: #f4f4f4; }
+        body { font-family: -apple-system, sans-serif; background: #fff; color: #1e1e1e; margin: 0; padding-bottom: 50px; }
         #main-wrapper { display: none; width: 100%; flex-direction: column; align-items: center; }
-        
-        /* 首頁樣式 */
         .container { width: 90%; max-width: 400px; text-align: center; padding-top: 40px; }
-        .counter { background: #fff; margin: 20px 0; padding: 25px; border-radius: 30px; border: 1px solid #f0f0f0; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
-        .days-number { font-size: 3.5rem; color: #ff6b81; font-weight: 800; letter-spacing: -2px; }
-        
-        /* 選單圖示 (彩色化) */
+        .days-number { font-size: 4rem; color: #ff4757; font-weight: 800; margin: 10px 0; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
-        .menu-item { background: #fff; padding: 20px; border-radius: 22px; border: 1px solid #f5f5f5; box-shadow: 0 4px 15px rgba(0,0,0,0.04); cursor: pointer; text-align: center; }
-        .menu-item i.fa-bell { color: #ff9f43; } /* 橘色 */
-        .menu-item i.fa-star { color: #feca57; } /* 黃色 */
-        .menu-item i.fa-utensils { color: #ee5253; } /* 紅色 */
-        .menu-item i.fa-wrench { color: #54a0ff; } /* 藍色 */
-        .menu-item i.fa-thumbs-up { color: #1dd1a1; } /* 綠色 */
+        .menu-item { background: #fff; padding: 25px; border-radius: 25px; border: 1px solid #eee; cursor: pointer; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .menu-item i { font-size: 2rem; margin-bottom: 10px; }
+
+        /* 卡片設計 */
+        .list-card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; position: relative; border: 1px solid #efefef; }
+        .card-bj { border-left: 6px solid var(--bj-blue); }
+        .card-sc { border-left: 6px solid var(--sc-pink); }
+        .user-label { font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; display: block; }
+        .label-bj { color: var(--bj-blue); }
+        .label-sc { color: var(--sc-pink); }
+
+        /* Threads 留言樣式 */
+        .thread-comment { margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f1f1; display: flex; align-items: flex-start; gap: 10px; }
+        .thread-icon { width: 30px; height: 30px; border-radius: 50%; background: #000; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; font-weight: bold; }
+        .comment-text { background: var(--threads-gray); padding: 10px 14px; border-radius: 18px; font-size: 0.9rem; flex-grow: 1; line-height: 1.4; }
         
-        /* 卡片分色外框 */
-        .list-card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 15px; position: relative; border: 2px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .card-bj { border-color: var(--bj-blue); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15); } /* 柏鈞藍 */
-        .card-sc { border-color: var(--sc-pink); box-shadow: 0 4px 12px rgba(244, 114, 182, 0.15); } /* 偲宸粉 */
-        
-        .user-tag { position: absolute; top: -10px; right: 20px; font-size: 0.7rem; padding: 2px 10px; border-radius: 10px; color: white; font-weight: bold; }
-        .tag-bj { background: var(--bj-blue); }
-        .tag-sc { background: var(--sc-pink); }
+        .cal-btn { font-size: 0.85rem; color: #0095f6; cursor: pointer; margin-top: 12px; display: inline-block; font-weight: 600; background: #f0f9ff; padding: 5px 12px; border-radius: 10px; }
 
-        /* 美食地圖篩選 */
-        .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
-        .filter-btn { padding: 6px 15px; background: #f1f5f9; border-radius: 15px; font-size: 0.8rem; border: none; white-space: nowrap; }
-
-        /* 美化輸入彈出框 */
-        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; }
-        .modal-content { background:white; width:85%; max-width:350px; padding:25px; border-radius:25px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        input, select { width:100%; padding:14px; margin:10px 0; border:1px solid #eee; border-radius:15px; font-size:1rem; outline:none; box-sizing:border-box; background: #f8fafc; }
-        .btn-ok { width:100%; background: #333; color:white; border:none; padding:15px; border-radius:15px; font-weight:bold; margin-top:10px; }
-
-        .back-btn { font-size: 1.1rem; cursor: pointer; margin-bottom: 20px; color: #333; display: flex; align-items: center; font-weight: 600; }
-        .fab { position: fixed; bottom: 30px; right: 30px; background: #333; color: white; width: 60px; height: 60px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: none; z-index: 100; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; }
+        .modal-content { background:white; width:85%; max-width:350px; padding:25px; border-radius:30px; }
+        input, select { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; background: #fafafa; box-sizing: border-box; font-size: 1rem; }
+        .btn-submit { width:100%; background: #000; color:white; border:none; padding:15px; border-radius:15px; font-weight:bold; }
+        .fab { position: fixed; bottom: 30px; right: 30px; background: #000; color: white; width: 60px; height: 60px; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; z-index: 100; box-shadow: 0 10px 20px rgba(0,0,0,0.2); border:none; }
     </style>
 </head>
 <body>
 
 <div id="main-wrapper">
     <div id="home-page" class="container">
-        <h1 style="font-weight: 800; font-size: 1.8rem;">偲宸 & 柏鈞</h1>
-        <div class="counter">
-            <p style="margin:0; font-size: 0.9rem; color: #888;">在一起第</p>
-            <div class="days-number" id="days-count">0</div>
-            <p style="margin:0; font-weight: 600;">DAYS</p>
-        </div>
+        <h1>偲宸 & 柏鈞</h1>
+        <div class="days-number" id="days-count">0</div>
+        <p style="font-weight: bold; color: #888;">DAYS TOGETHER</p>
         <div class="menu-grid">
-            <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell"></i><div>提醒事項</div></div>
-            <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star"></i><div>願望</div></div>
-            <div class="menu-item" onclick="showPage('food')"><i class="fas fa-utensils"></i><div>想吃/去的</div></div>
-            <div class="menu-item" onclick="showPage('improve')"><i class="fas fa-wrench"></i><div>改善</div></div>
-            <div class="menu-item" style="grid-column: span 2;" onclick="showPage('merit')"><i class="fas fa-thumbs-up"></i><div>優點</div></div>
+            <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell" style="color:#ff9f43;"></i><div>提醒</div></div>
+            <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star" style="color:#feca57;"></i><div>願望</div></div>
+            <div class="menu-item" onclick="showPage('food')"><i class="fas fa-utensils" style="color:#ee5253;"></i><div>想吃/去的</div></div>
+            <div class="menu-item" onclick="showPage('improve')"><i class="fas fa-wrench" style="color:#54a0ff;"></i><div>改善</div></div>
+            <div class="menu-item" style="grid-column: span 2;" onclick="showPage('merit')"><i class="fas fa-thumbs-up" style="color:#1dd1a1;"></i><div>優點</div></div>
         </div>
     </div>
 
-    <div id="sub-page-container" class="sub-page" style="display:none; width:90%; max-width:400px; padding:20px;">
-        <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
-        <h2 id="page-title" style="margin-bottom: 20px;"></h2>
-        <div id="page-filters" class="filter-bar" style="display:none;"></div>
-        <div id="list-content">讀取中...</div>
+    <div id="sub-page-container" style="display:none; width:90%; max-width:400px; padding:20px;">
+        <div onclick="showPage('home')" style="cursor:pointer; margin-bottom:20px; font-weight:bold; color:#888;"><i class="fas fa-chevron-left"></i> 返回</div>
+        <h2 id="page-title"></h2>
+        
+        <div id="food-map-section" style="display:none; margin-bottom:20px;">
+            <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1vXy8oWpYqB-JmU5u4f-u_rGf3vK8_pE" width="100%" height="400" style="border-radius:20px; border:1px solid #eee;"></iframe>
+        </div>
+
+        <div id="list-content"></div>
         <button class="fab" onclick="openModal()"><i class="fas fa-plus"></i></button>
     </div>
 </div>
 
 <div id="inputModal" class="modal">
     <div class="modal-content">
-        <h3 id="modal-title" style="margin-top:0;">新增紀錄</h3>
-        <label style="font-size:0.8rem; color:#666;">是誰要新增：</label>
-        <select id="input-user">
-            <option value="柏鈞">柏鈞</option>
-            <option value="偲宸">偲宸</option>
-        </select>
-        <input type="text" id="input-content" placeholder="內容...">
+        <h3 style="margin-top:0;">新增紀錄</h3>
+        <select id="input-user"><option value="柏鈞">柏鈞</option><option value="偲宸">偲宸</option></select>
+        <input type="text" id="input-content" placeholder="輸入內容...">
         <div id="date-fields" style="display:none;">
             <input type="date" id="input-date">
             <input type="time" id="input-time" value="09:00">
         </div>
-        <button class="btn-ok" onclick="submitData()">確定新增</button>
-        <button style="width:100%; background:none; border:none; color:#999; margin-top:10px;" onclick="closeModal()">取消</button>
+        <button class="btn-submit" onclick="submitData()">發布</button>
+        <button style="width:100%; background:none; border:none; color:#ccc; margin-top:10px;" onclick="closeModal()">取消</button>
     </div>
 </div>
 
 <script>
-    // 已更新為你最新的 URL
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7EMK3nVZIyxTYnx8O8-WnkuB-3BQrUi1oC_zy0l2T-vdDVAHjufdES0uxV1SzmIsa/exec";
-    const MAP_URL = "https://www.google.com/maps/search/?api=1&query="; // 基本 Google Map 搜尋連結
+    // 網址已更新為你給的最新版
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwHitxEv5qwTewUfswcK-fc3LIaQ_sPIFgcY8MuQbp-pJ87sOb2ZUaqvARZO6WuxAJ/exec";
     let currentPage = "";
 
     function init() {
-        if (sessionStorage.getItem('isLogged') === 'true') {
-            document.getElementById('main-wrapper').style.display = 'flex';
-        } else {
-            let pass = prompt("請輸入密碼 0528");
-            if (pass === "0528") {
-                sessionStorage.setItem('isLogged', 'true');
-                document.getElementById('main-wrapper').style.display = 'flex';
-            } else { location.reload(); }
+        if (sessionStorage.getItem('isLogged') === 'true') document.getElementById('main-wrapper').style.display = 'flex';
+        else {
+            let p = prompt("密碼 0528");
+            if (p === "0528") { sessionStorage.setItem('isLogged', 'true'); document.getElementById('main-wrapper').style.display = 'flex'; }
+            else location.reload();
         }
     }
     init();
 
-    const startDate = new Date(2025, 4, 28); 
-    document.getElementById('days-count').innerText = Math.floor((new Date() - startDate) / 86400000);
+    document.getElementById('days-count').innerText = Math.floor((new Date() - new Date(2025, 4, 28)) / 86400000);
 
     function showPage(id) {
         currentPage = id;
         document.getElementById('home-page').style.display = (id === 'home') ? 'block' : 'none';
         document.getElementById('sub-page-container').style.display = (id === 'home') ? 'none' : 'block';
+        document.getElementById('food-map-section').style.display = (id === 'food') ? 'block' : 'none';
         if(id !== 'home') {
-            const titles = { reminders:'提醒事項', wishes:'願望', food:'想吃/去的', improve:'改善', merit:'優點' };
-            document.getElementById('page-title').innerText = titles[id];
-            loadCloudData();
+            const t = { reminders:'提醒事項', wishes:'願望', food:'想吃/去的', improve:'改善', merit:'優點' };
+            document.getElementById('page-title').innerText = t[id];
+            loadData();
         }
     }
 
-    async function loadCloudData() {
-        const listContainer = document.getElementById('list-content');
-        listContainer.innerHTML = "同步中...";
-        try {
-            const res = await fetch(SCRIPT_URL);
-            const data = await res.json();
-            listContainer.innerHTML = "";
-            
-            const catMap = { reminders:'提醒', wishes:'願望', food:'愛吃', improve:'改善', merit:'優點' };
-            const filtered = data.filter(i => i.category === catMap[currentPage]);
+    async function loadData() {
+        const container = document.getElementById('list-content');
+        container.innerHTML = "同步中...";
+        const res = await fetch(SCRIPT_URL);
+        const data = await res.json();
+        container.innerHTML = "";
+        
+        const catMap = { reminders:'提醒', wishes:'願望', food:'愛吃', improve:'改善', merit:'優點' };
+        data.filter(i => i.category === catMap[currentPage]).forEach(item => {
+            const isBJ = item.user === '柏鈞';
+            let card = `
+                <div class="list-card ${isBJ ? 'card-bj' : 'card-sc'}">
+                    <span class="user-label ${isBJ ? 'label-bj' : 'label-sc'}">${item.user}</span>
+                    <b style="font-size:1.15rem;">${item.content}</b>
+                    ${item.date ? `<div style="font-size:0.85rem; color:#999; margin-top:5px;"><i class="far fa-clock"></i> ${item.date} ${item.time}</div>` : ''}
+                    
+                    ${(currentPage==='merit'||currentPage==='improve') ? `
+                        <div class="thread-comment">
+                            <div class="thread-icon" onclick="addComment(${item.id})">${item.comment ? item.comment.charAt(0) : '+'}</div>
+                            <div class="comment-text" onclick="addComment(${item.id})">${item.comment || '<span style="color:#bbb">點擊留下 Threads 回應...</span>'}</div>
+                        </div>
+                    ` : ''}
 
-            filtered.forEach(item => {
-                const userClass = item.user === '柏鈞' ? 'card-bj' : 'card-sc';
-                const tagClass = item.user === '柏鈞' ? 'tag-bj' : 'tag-sc';
-                
-                let card = `
-                    <div class="list-card ${userClass}">
-                        <span class="user-tag ${tagClass}">${item.user}</span>
-                        <div style="position:absolute; top:15px; right:15px; color:#ddd;" onclick="deleteItem(${item.id})"><i class="fas fa-trash"></i></div>
-                        <b>${item.content}</b>
-                        ${item.date ? `<small><i class="far fa-calendar-alt"></i> ${item.date} ${item.time || ''}</small>` : ''}`;
+                    ${currentPage==='reminders' ? `<div class="cal-btn" onclick="addToCalendar('${item.content}','${item.date}')"><i class="far fa-calendar-plus"></i> 加入 Apple 行事曆</div>` : ''}
+                    <div style="position:absolute; top:20px; right:20px; color:#f1f1f1" onclick="deleteItem(${item.id})"><i class="fas fa-trash"></i></div>
+                </div>`;
+            container.innerHTML += card;
+        });
+    }
 
-                if(currentPage === 'reminders' && item.date) {
-                    const cleanDate = item.date.replace(/-/g, '');
-                    const ics = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ASUMMARY:${encodeURIComponent(item.content)}%0ADTSTART:${cleanDate}T090000Z%0ADTEND:${cleanDate}T100000Z%0AEND:VEVENT%0AEND:VCALENDAR`;
-                    card += `<br><a href="${ics}" download="event.ics" style="color:var(--bj-blue); font-size:0.8rem; text-decoration:none; display:inline-block; margin-top:10px;"><i class="fas fa-calendar-plus"></i> 加入 Apple Calendar</a>`;
-                }
+    function addToCalendar(title, dateStr) {
+        if(!confirm("確定要將此事項加入 Apple 行事曆嗎？")) return;
+        const date = dateStr.replace(/\//g,'');
+        const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${title}\nDTSTART:${date}T090000Z\nDTEND:${date}T100000Z\nEND:VEVENT\nEND:VCALENDAR`;
+        const blob = new Blob([ics], {type: 'text/calendar;charset=utf-8'});
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'event.ics';
+        link.click();
+    }
 
-                if(currentPage === 'food') {
-                    card += `<br><a href="${MAP_URL}${encodeURIComponent(item.content)}" target="_blank" style="color:#ee5253; font-size:0.8rem; text-decoration:none; display:inline-block; margin-top:10px;"><i class="fas fa-map-marked-alt"></i> 在地圖中查看</a>`;
-                }
-
-                card += `</div>`;
-                listContainer.innerHTML += card;
-            });
-            if(filtered.length === 0) listContainer.innerHTML = "<p style='color:#ccc; text-align:center;'>目前空空如也...</p>";
-        } catch(e) { listContainer.innerHTML = "讀取失敗，請確認 Google Script 部署。"; }
+    async function addComment(id) {
+        let user = prompt("你是誰？(柏鈞/偲宸)");
+        if(!user) return;
+        let msg = prompt("留下留言：");
+        if(msg) {
+            await fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", body:JSON.stringify({action:"addComment", id:id, comment: user + "：" + msg})});
+            alert("留言成功！");
+            loadData();
+        }
     }
 
     function openModal() {
-        document.getElementById('inputModal').style.display = 'flex';
-        document.getElementById('date-fields').style.display = (currentPage === 'reminders') ? 'block' : 'none';
-        document.getElementById('input-content').value = "";
+        document.getElementById('inputModal').style.display='flex';
+        document.getElementById('date-fields').style.display = (currentPage==='reminders')?'block':'none';
     }
-    function closeModal() { document.getElementById('inputModal').style.display = 'none'; }
+    function closeModal() { document.getElementById('inputModal').style.display='none'; }
 
     async function submitData() {
         const user = document.getElementById('input-user').value;
@@ -180,24 +173,17 @@
         const date = document.getElementById('input-date').value;
         const time = document.getElementById('input-time').value;
         const catMap = { reminders:'提醒', wishes:'願望', food:'愛吃', improve:'改善', merit:'優點' };
-
-        if(!content) return alert("請輸入內容！");
+        if(!content) return;
         closeModal();
-        await fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify({ category: catMap[currentPage], content, date, time, user })
-        });
-        setTimeout(loadCloudData, 1500); // 延遲 1.5 秒等 Google 寫入
+        await fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", body:JSON.stringify({category:catMap[currentPage], content, date, time, user})});
+        setTimeout(loadData, 1500);
     }
 
     async function deleteItem(id) {
-        if(!confirm("確定要刪除嗎？")) return;
-        await fetch(SCRIPT_URL, {
-            method: "POST", mode: "no-cors",
-            body: JSON.stringify({ action: "delete", id: id })
-        });
-        setTimeout(loadCloudData, 1000);
+        if(confirm("確定要刪除這條回憶嗎？")) {
+            await fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", body:JSON.stringify({action:"delete", id:id})});
+            setTimeout(loadData, 1000);
+        }
     }
 </script>
 </body>
