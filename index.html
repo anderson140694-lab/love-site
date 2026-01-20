@@ -7,16 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --bj-blue: #0095f6; --sc-pink: #fd5d93; --th-gray: #f5f5f5; }
-        body { font-family: -apple-system, sans-serif; background: #fff; margin: 0; padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, sans-serif; background: #fff; margin: 0; padding-bottom: 80px; }
         #main-wrapper { display: none; flex-direction: column; align-items: center; }
         .container { width: 90%; max-width: 400px; text-align: center; padding-top: 30px; }
         .days-number { font-size: 4.5rem; color: #ff4757; font-weight: 800; letter-spacing: -2px; }
-        
-        /* 選單佈局 */
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; margin-top: 20px; }
-        .menu-item { background: #fff; padding: 25px; border-radius: 25px; border: 1px solid #eee; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-
-        /* 卡片設計 (Threads 風格) */
+        .menu-item { background: #fff; padding: 25px; border-radius: 25px; border: 1px solid #eee; text-align: center; }
+        
         .list-card { background: white; border-radius: 22px; padding: 20px; margin-bottom: 15px; border: 1px solid #f0f0f0; position: relative; }
         .card-bj { border-left: 6px solid var(--bj-blue); }
         .card-sc { border-left: 6px solid var(--sc-pink); }
@@ -24,7 +21,6 @@
         .tag-bj { background: #e1f5fe; color: var(--bj-blue); }
         .tag-sc { background: #fce4ec; color: var(--sc-pink); }
 
-        /* Threads 互動區 */
         .interaction-row { display: flex; gap: 18px; margin-top: 15px; color: #444; font-size: 0.95rem; }
         .interaction-item { display: flex; align-items: center; gap: 6px; cursor: pointer; }
         .comment-area { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #f8f8f8; }
@@ -32,17 +28,10 @@
         .thread-avatar { width: 32px; height: 32px; border-radius: 50%; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; flex-shrink: 0; }
         .thread-bubble { background: var(--th-gray); padding: 12px 16px; border-radius: 20px; font-size: 0.9rem; flex-grow: 1; line-height: 1.4; }
 
-        /* 地圖篩選介面 */
-        .map-wrapper { width: 100%; height: 500px; border-radius: 25px; overflow: hidden; border: 1px solid #eee; margin-top: 10px; }
-        .map-controls { display: flex; gap: 10px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 5px; }
-        .map-btn { background: #000; color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; text-decoration: none; display: flex; align-items: center; gap: 6px; }
-
-        /* 公用元件 */
-        .cal-link { font-size: 0.85rem; color: #0095f6; background: #f0f9ff; padding: 7px 15px; border-radius: 20px; display: inline-block; margin-top: 12px; font-weight: 600; text-decoration: none; }
         .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; }
         .modal-content { background:white; width:85%; max-width:330px; padding:25px; border-radius:30px; }
         select, input { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; background: #fafafa; box-sizing: border-box; font-size: 1rem; }
-        .btn-black { background:#000; color:#fff; border:none; width:100%; padding:16px; border-radius:18px; font-weight:bold; width: 100%; }
+        .btn-black { background:#000; color:#fff; border:none; width:100%; padding:16px; border-radius:18px; font-weight:bold; }
         .fab { position: fixed; bottom: 30px; right: 30px; background: #000; color: white; width: 62px; height: 62px; border-radius: 31px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; z-index: 100; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     </style>
 </head>
@@ -56,7 +45,7 @@
         <div class="menu-grid">
             <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell" style="color:#ff9f43; font-size:1.8rem;"></i><div>提醒</div></div>
             <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star" style="color:#feca57; font-size:1.8rem;"></i><div>願望</div></div>
-            <div class="menu-item" onclick="showPage('food')"><i class="fas fa-utensils" style="color:#ee5253; font-size:1.8rem;"></i><div>想吃/去</div></div>
+            <div class="menu-item" onclick="showPage('food')"><i class="fas fa-heart" style="color:#ee5253; font-size:1.8rem;"></i><div>喜歡的餐廳</div></div>
             <div class="menu-item" onclick="showPage('improve')"><i class="fas fa-wrench" style="color:#54a0ff; font-size:1.8rem;"></i><div>改善</div></div>
             <div class="menu-item" style="grid-column: span 2;" onclick="showPage('merit')"><i class="fas fa-thumbs-up" style="color:#1dd1a1; font-size:1.8rem;"></i><div>優點</div></div>
         </div>
@@ -64,20 +53,9 @@
 
     <div id="sub-page-container" style="display:none; width:90%; max-width:400px; padding:20px;">
         <div onclick="showPage('home')" style="cursor:pointer; margin-bottom:15px; color:#bbb; font-weight:bold;"><i class="fas fa-chevron-left"></i> 返回</div>
-        <h2 id="page-title" style="margin:0 0 15px 0;"></h2>
-        
-        <div id="food-map-section" style="display:none; margin-bottom:20px;">
-            <div class="map-controls">
-                <a href="https://www.google.com/maps/search/?api=1&query=美食&open=menu" target="_blank" class="map-btn"><i class="fas fa-location-arrow"></i> 距離排序 (附近)</a>
-                <a href="https://www.google.com/maps/d/u/0/viewer?mid=1fWp5QG6Z6z4-z9W_z9W_z9W_z9W_z9W" target="_blank" class="map-btn" style="background:#444;"><i class="fas fa-external-link-alt"></i> 開啟地圖檔</a>
-            </div>
-            <div class="map-wrapper">
-                <iframe src="https://www.google.com/maps/d/embed?mid=1fWp5QG6Z6z4-z9W_z9W_z9W_z9W_z9W" width="100%" height="100%" style="border:0;"></iframe>
-            </div>
-        </div>
-
+        <h2 id="page-title" style="margin:0 0 20px 0;"></h2>
         <div id="list-content"></div>
-        <button id="add-fab" class="fab" onclick="openModal()"><i class="fas fa-plus"></i></button>
+        <button class="fab" onclick="openModal()"><i class="fas fa-plus"></i></button>
     </div>
 </div>
 
@@ -85,7 +63,7 @@
     <div class="modal-content">
         <h3 style="margin-top:0;">新增回應</h3>
         <select id="comment-user"><option value="柏鈞">我是 柏鈞</option><option value="偲宸">我是 偲宸</option></select>
-        <input type="text" id="comment-text" placeholder="輸入你想說的話...">
+        <input type="text" id="comment-text" placeholder="輸入內容...">
         <button class="btn-black" onclick="submitComment()">發送留言</button>
         <button style="width:100%; background:none; border:none; color:#ccc; margin-top:10px;" onclick="closeCommentModal()">取消</button>
     </div>
@@ -93,27 +71,30 @@
 
 <div id="inputModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0;">新增紀錄</h3>
+        <h3 id="modal-title">新增紀錄</h3>
         <select id="input-user"><option value="柏鈞">柏鈞</option><option value="偲宸">偲宸</option></select>
         <input type="text" id="input-content" placeholder="內容...">
         <div id="date-fields" style="display:none;">
             <input type="date" id="input-date">
+            <label style="font-size:0.8rem; color:#999;">開始時間</label>
             <input type="time" id="input-time" value="09:00">
+            <label style="font-size:0.8rem; color:#999;">結束時間</label>
+            <input type="time" id="input-endtime" value="10:00">
         </div>
-        <button class="btn-black" onclick="submitData()">發布到雲端</button>
+        <button class="btn-black" onclick="submitData()">發布</button>
         <button style="width:100%; background:none; border:none; color:#ccc; margin-top:10px;" onclick="closeModal()">取消</button>
     </div>
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzqfq_fqk8H99hq0t4IMDOWWbr8WJLNDJLs4ya9s43V76oBcZttEoj2TYkQ499H2xs/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHIFk7eE9XDQg-DOyiU5Q62TWt84MnlP590nAT3kGwBydZ7J7PZed6RhOobCAnV7TN/exec";
     let currentPage = "";
     let activeItemId = null;
 
     function init() {
         if (sessionStorage.getItem('isLogged') === 'true') document.getElementById('main-wrapper').style.display = 'flex';
         else {
-            let p = prompt("請輸入密碼。密碼是0528");
+            let p = prompt("請輸入密碼。");
             if (p === "0528") { sessionStorage.setItem('isLogged', 'true'); document.getElementById('main-wrapper').style.display = 'flex'; }
             else location.reload();
         }
@@ -126,13 +107,8 @@
         currentPage = id;
         document.getElementById('home-page').style.display = (id === 'home') ? 'block' : 'none';
         document.getElementById('sub-page-container').style.display = (id === 'home') ? 'none' : 'block';
-        
-        // 特殊處理：想吃/去的 (顯示地圖，隱藏新增按鈕)
-        document.getElementById('food-map-section').style.display = (id === 'food') ? 'block' : 'none';
-        document.getElementById('add-fab').style.display = (id === 'food') ? 'none' : 'flex';
-
         if(id !== 'home') {
-            const titles = { reminders:'提醒事項', wishes:'願望', food:'想吃/去的', improve:'改善', merit:'優點' };
+            const titles = { reminders:'提醒事項', wishes:'願望', food:'喜歡的餐廳', improve:'改善', merit:'優點' };
             document.getElementById('page-title').innerText = titles[id];
             loadData();
         }
@@ -145,7 +121,7 @@
         const data = await res.json();
         container.innerHTML = "";
         
-        const catMap = { reminders:'提醒', wishes:'願望', food:'愛吃', improve:'改善', merit:'優點' };
+        const catMap = { reminders:'提醒', wishes:'願望', food:'喜歡的餐廳', improve:'改善', merit:'優點' };
         data.filter(i => i.category === catMap[currentPage]).forEach(item => {
             const isBJ = item.user === '柏鈞';
             const commentCount = item.comments ? item.comments.length : 0;
@@ -156,18 +132,16 @@
                     <span class="user-tag ${isBJ ? 'tag-bj' : 'tag-sc'}">${item.user}</span>
                     <div style="font-weight:700; font-size:1.1rem; color:#1a1a1a;">${item.content}</div>
                     <div style="font-size:0.8rem; color:#aaa; margin-top:8px;">
-                        <i class="far fa-clock"></i> ${item.date} ${item.time || ''}
+                        <i class="far fa-clock"></i> ${item.date} ${item.time}${item.endTime ? ' ~ ' + item.endTime : ''}
                     </div>
                     
-                    ${isReminder && item.date ? `<div class="cal-link" onclick="addToCalendar('${item.content}','${item.date}')"><i class="far fa-calendar-plus"></i> 加入行事曆</div>` : ''}
-
                     ${!isReminder ? `
                     <div class="interaction-row">
                         <div class="interaction-item" onclick="openCommentModal(${item.id})">
                             <i class="far fa-comment"></i> <span>${commentCount}</span>
                         </div>
                         <div class="interaction-item" onclick="toggleComments(${item.id})">
-                            <i class="fas fa-chevron-down"></i> <span>查看回應</span>
+                            <i class="fas fa-chevron-down"></i> <span>展開回應</span>
                         </div>
                     </div>` : ''}
 
@@ -176,7 +150,7 @@
                             <div class="thread-msg">
                                 <div class="thread-avatar">${c.user.charAt(0)}</div>
                                 <div class="thread-bubble">
-                                    <b style="font-size:0.75rem; color:#333;">${c.user}</b> <span style="font-size:0.7rem; color:#aaa; margin-left:6px;">${c.time}</span><br>${c.text}
+                                    <b style="font-size:0.85rem;">${c.user}</b> <small style="color:#999">${c.time}</small><br>${c.text}
                                 </div>
                             </div>`).join('')}
                     </div>
@@ -203,17 +177,6 @@
         setTimeout(loadData, 1200);
     }
 
-    function addToCalendar(title, dateStr) {
-        if(!confirm("確定要將此事項加入 Apple 行事曆嗎？")) return;
-        const date = dateStr.replace(/\//g,''); 
-        const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${title}\nDTSTART;VALUE=DATE:${date}\nDTEND;VALUE=DATE:${date}\nEND:VEVENT\nEND:VCALENDAR`;
-        const blob = new Blob([ics], {type: 'text/calendar;charset=utf-8'});
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = 'event.ics';
-        link.click();
-    }
-
     function openModal() {
         document.getElementById('inputModal').style.display='flex';
         document.getElementById('date-fields').style.display = (currentPage==='reminders')?'block':'none';
@@ -225,15 +188,16 @@
         const content = document.getElementById('input-content').value;
         const date = document.getElementById('input-date').value;
         const time = document.getElementById('input-time').value;
-        const catMap = { reminders:'提醒', wishes:'願望', food:'愛吃', improve:'改善', merit:'優點' };
+        const endTime = document.getElementById('input-endtime').value;
+        const catMap = { reminders:'提醒', wishes:'願望', food:'喜歡的餐廳', improve:'改善', merit:'優點' };
         if(!content) return;
         closeModal();
-        await fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", body:JSON.stringify({category:catMap[currentPage], content, date, time, user})});
+        await fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", body:JSON.stringify({category:catMap[currentPage], content, date, time, endTime, user})});
         setTimeout(loadData, 1500);
     }
 
     async function deleteItem(id) {
-        if(confirm("確定要刪除這條紀錄嗎？")) {
+        if(confirm("確定要刪除嗎？")) {
             await fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", body:JSON.stringify({action:"delete", id:id})});
             setTimeout(loadData, 1000);
         }
