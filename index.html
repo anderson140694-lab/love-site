@@ -5,28 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我們的小時光</title>
     <style>
-        /* CSS：這裡負責網頁的「長相」，如顏色、大小、間距 */
-        :root { --primary-color: #ffb6c1; --text-color: #555; }
-        body { font-family: sans-serif; background-color: #fff5f7; color: var(--text-color); display: flex; flex-direction: column; align-items: center; margin: 0; }
+        /* 1. 背景改為淡藍色 */
+        :root { 
+            --primary-blue: #e3f2fd; /* 淡藍色背景 */
+            --accent-blue: #2196f3;  /* 深藍色強調 */
+            --text-color: #333; 
+        }
         
-        /* 初始隱藏內容，密碼正確後才顯示 */
-        #main-content { display: none; width: 90%; max-width: 400px; text-align: center; padding: 20px; }
+        body { 
+            font-family: sans-serif; 
+            background-color: var(--primary-blue); 
+            color: var(--text-color); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            margin: 0; 
+            height: 100vh;
+        }
         
-        .header img { width: 120px; height: 120px; border-radius: 50%; border: 5px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); object-fit: cover; }
-        .counter { background: white; margin: 20px 0; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .days-number { font-size: 3rem; color: #ff6b81; font-weight: bold; }
-        .timeline { text-align: left; background: white; padding: 20px; border-radius: 20px; }
-        .event { margin: 10px 0; display: flex; justify-content: space-between; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
+        /* 初始隱藏內容 */
+        #main-content { 
+            display: none; 
+            width: 90%; 
+            max-width: 400px; 
+            text-align: center; 
+            padding: 20px; 
+        }
+        
+        .header img { 
+            width: 120px; height: 120px; border-radius: 50%; 
+            border: 5px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+            object-fit: cover; margin-top: 20px;
+        }
+
+        .counter { 
+            background: rgba(255, 255, 255, 0.8); 
+            margin: 30px 0; padding: 30px 20px; 
+            border-radius: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+        }
+
+        .days-number { 
+            font-size: 3.5rem; 
+            color: var(--accent-blue); 
+            font-weight: bold; 
+        }
+
+        /* 4. 【點擊進入】按鈕樣式 */
+        .enter-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
+            transition: transform 0.2s;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .enter-btn:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
 
 <div id="main-content">
     <div class="header">
-        <br>
         <img src="https://via.placeholder.com/150" alt="我們的照片">
-        <h1>小明 & 小美</h1>
-        <p>自 2023 年 5 月 20 日起</p>
+        <h1>偲宸 & 柏鈞</h1>
+        <p>自 2025 年 5 月 28 日起</p>
     </div>
 
     <div class="counter">
@@ -35,29 +87,31 @@
         <p>DAYS</p>
     </div>
 
-    <div class="timeline">
-        <h3>重要紀念日</h3>
-        <div class="event"><span>第一次見面</span> <span>2023-04-01</span></div>
-        <div class="event"><span>正式交往</span> <span>2023-05-20</span></div>
-        </div>
+    <button class="enter-btn" onclick="enterNextPage()">點擊進入</button>
 </div>
 
 <script>
-    // JavaScript：這裡負責網頁的「邏輯」，如密碼檢查、日期計算
-    
-    // 1. 密碼檢查功能
+    // 密碼檢查
     const password = prompt("請輸入我們的專屬密碼：");
     if (password === "0528") {
-        document.getElementById('main-content').style.display = 'block'; // 密碼正確才顯示內容
+        document.getElementById('main-content').style.display = 'block';
     } else {
-        alert("密碼錯誤，請重新整理頁面再試一次！");
+        alert("密碼錯誤！");
     }
 
-    // 2. 自動計算天數功能
-    const startDate = new Date(2023, 4, 20); // 這裡改你們的交往日 (年, 月-1, 日)
+    // 3. 計算 2025/05/28 開始的天數
+    // 月份 4 代表 5 月 (JS 月份由 0 開始)
+    const startDate = new Date(2025, 4, 28); 
     const today = new Date();
-    const diffDays = Math.ceil(Math.abs(today - startDate) / (1000 * 60 * 60 * 24)); 
+    const diffTime = today - startDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
     document.getElementById('days-count').innerText = diffDays;
+
+    // 5. 點擊進入後的動作 (先預留位置)
+    function enterNextPage() {
+        alert("即將進入選項頁面...（等候你告訴我下一步要加什麼內容！）");
+        // 以後要在這裡寫跳轉到選項的程式碼
+    }
 </script>
 
 </body>
