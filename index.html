@@ -8,77 +8,57 @@
     <style>
         :root { --primary-blue: #f0f7ff; --accent-blue: #3b82f6; --text-color: #333; }
         body { font-family: -apple-system, sans-serif; background-color: var(--primary-blue); color: var(--text-color); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        
         #main-wrapper { display: none; width: 100%; flex-direction: column; align-items: center; }
         .container { width: 90%; max-width: 400px; text-align: center; padding-top: 50px; }
         .sub-page { display: none; width: 90%; max-width: 400px; padding: 20px; text-align: left; box-sizing: border-box; }
-
-        /* 首頁計數器 */
         .counter { background: white; margin: 30px 0; padding: 30px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .days-number { font-size: 3.5rem; color: #ff6b81; font-weight: bold; }
-
-        /* 選單與數字通知 */
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
         .menu-item { background: white; padding: 25px 10px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor: pointer; text-align: center; position: relative; }
         .menu-item i { font-size: 2rem; color: var(--accent-blue); margin-bottom: 10px; }
         .badge { position: absolute; top: -5px; right: -5px; background: #ff4757; color: white; font-size: 0.75rem; padding: 3px 8px; border-radius: 20px; font-weight: bold; border: 2px solid white; display: none; }
-
-        /* 美化卡片樣式 (參考截圖) */
+        
+        /* 美化卡片 */
         .list-card { 
             background: white; border-radius: 18px; padding: 20px; margin-bottom: 20px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06); 
-            border-left: 6px solid var(--accent-blue); 
-            position: relative; overflow: visible;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-left: 6px solid var(--accent-blue); 
+            position: relative;
         }
-        .list-card b { font-size: 1.15rem; display: block; margin-bottom: 8px; }
-        .list-card small { color: #888; line-height: 1.5; display: block; }
-        .error-icon { position: absolute; top: -10px; right: -10px; background: #ff4757; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .list-card b { font-size: 1.15rem; display: block; margin-bottom: 8px; padding-right: 30px; }
+        .list-card small { color: #888; display: block; }
+        
+        /* 刪除按鈕 */
+        .delete-btn { position: absolute; top: 15px; right: 15px; color: #ccc; cursor: pointer; transition: 0.2s; padding: 5px; }
+        .delete-btn:hover { color: #ff4757; }
 
-        .calendar-btn { 
-            display: inline-flex; align-items: center; margin-top: 12px; padding: 6px 12px; 
-            background: #f1f5f9; border-radius: 8px; text-decoration: none; color: #475569; font-size: 0.85rem; font-weight: 500;
-        }
-        .calendar-btn i { color: #ef4444; margin-right: 6px; }
-
+        .calendar-btn { display: inline-flex; align-items: center; margin-top: 12px; padding: 6px 12px; background: #f1f5f9; border-radius: 8px; text-decoration: none; color: #475569; font-size: 0.85rem; }
         .back-btn { font-size: 1.1rem; cursor: pointer; margin-bottom: 20px; color: var(--accent-blue); display: flex; align-items: center; }
         .fab { position: fixed; bottom: 30px; right: 30px; background: var(--accent-blue); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: none; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4); z-index: 100; }
     </style>
 </head>
 <body>
-
     <div id="main-wrapper">
         <div id="home-page" class="container">
             <h1>偲宸 & 柏鈞</h1>
-            <p>自 2025 年 5 月 28 日起</p>
             <div class="counter">
                 <p>我們已經在一起</p>
                 <div class="days-number" id="days-count">0</div>
                 <p>DAYS</p>
             </div>
             <div class="menu-grid">
-                <div class="menu-item" onclick="showPage('reminders')">
-                    <i class="fas fa-bell"></i>
-                    <div>提醒事項</div>
-                    <span id="badge-reminders" class="badge">0</span>
-                </div>
-                <div class="menu-item" onclick="showPage('wishes')">
-                    <i class="fas fa-star"></i>
-                    <div>願望 & 目標</div>
-                    <span id="badge-wishes" class="badge">0</span>
-                </div>
+                <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell"></i><div>提醒事項</div><span id="badge-reminders" class="badge">0</span></div>
+                <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star"></i><div>願望 & 目標</div><span id="badge-wishes" class="badge">0</span></div>
             </div>
         </div>
-
         <div id="reminders-page" class="sub-page">
             <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
-            <h2 style="display:flex; align-items:center;"><i class="fas fa-bell" style="margin-right:10px;"></i> 提醒事項</h2>
+            <h2>提醒事項</h2>
             <div id="reminder-list">讀取中...</div>
             <button class="fab" onclick="addNewItem('提醒')"><i class="fas fa-plus"></i></button>
         </div>
-
         <div id="wishes-page" class="sub-page">
             <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
-            <h2 style="display:flex; align-items:center;"><i class="fas fa-star" style="margin-right:10px;"></i> 願望 & 目標</h2>
+            <h2>願望 & 目標</h2>
             <div id="wish-list">讀取中...</div>
             <button class="fab" onclick="addNewItem('願望')"><i class="fas fa-plus"></i></button>
         </div>
@@ -88,19 +68,11 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4fiWVeD7oB_l45JUSdKXUfjnl7EKZ6ZyA3bJEnoxpbLn2_6FhpbBs7W9f85rtR1U/exec";
 
     function init() {
-        if (sessionStorage.getItem('isLogged') === 'true') {
-            document.getElementById('main-wrapper').style.display = 'flex';
-            loadBadgeCounts();
-        } else {
+        if (sessionStorage.getItem('isLogged') === 'true') { document.getElementById('main-wrapper').style.display = 'flex'; } 
+        else {
             let pass = prompt("請輸入密碼");
-            if (pass === "0528") {
-                sessionStorage.setItem('isLogged', 'true');
-                document.getElementById('main-wrapper').style.display = 'flex';
-                loadBadgeCounts();
-            } else {
-                alert("密碼錯誤！");
-                window.location.reload();
-            }
+            if (pass === "0528") { sessionStorage.setItem('isLogged', 'true'); document.getElementById('main-wrapper').style.display = 'flex'; } 
+            else { alert("密碼錯誤！"); window.location.reload(); }
         }
     }
     init();
@@ -109,58 +81,46 @@
     document.getElementById('days-count').innerText = Math.floor((new Date() - startDate) / 86400000);
 
     function showPage(id) {
-        document.getElementById('home-page').style.display = 'none';
-        document.getElementById('reminders-page').style.display = 'none';
-        document.getElementById('wishes-page').style.display = 'none';
+        document.querySelectorAll('.container, .sub-page').forEach(p => p.style.display = 'none');
         document.getElementById(id + '-page').style.display = 'block';
-        if(id !== 'home') {
-            localStorage.setItem('lastViewed_' + id, Date.now());
-            updateBadge(id, 0);
-            loadCloudData();
-        }
-    }
-
-    async function loadBadgeCounts() {
-        const res = await fetch(SCRIPT_URL);
-        const data = await res.json();
-        const rCount = data.filter(i => i.category === '提醒').length;
-        const wCount = data.filter(i => i.category === '願望').length;
-        
-        // 簡單邏輯：如果數量跟上次存的不一樣，就顯示紅點
-        if(rCount > (localStorage.getItem('count_reminders') || 0)) updateBadge('reminders', rCount);
-        if(wCount > (localStorage.getItem('count_wishes') || 0)) updateBadge('wishes', wCount);
-        
-        localStorage.setItem('count_reminders', rCount);
-        localStorage.setItem('count_wishes', wCount);
-    }
-
-    function updateBadge(id, count) {
-        const b = document.getElementById('badge-' + id);
-        if(count > 0) { b.style.display = 'block'; b.innerText = count; }
-        else { b.style.display = 'none'; }
+        if(id !== 'home') loadCloudData();
     }
 
     async function loadCloudData() {
-        try {
-            const res = await fetch(SCRIPT_URL);
-            const data = await res.json();
-            const rList = document.getElementById('reminder-list');
-            const wList = document.getElementById('wish-list');
-            rList.innerHTML = ""; wList.innerHTML = "";
+        const res = await fetch(SCRIPT_URL);
+        const data = await res.json();
+        const rList = document.getElementById('reminder-list');
+        const wList = document.getElementById('wish-list');
+        rList.innerHTML = ""; wList.innerHTML = "";
 
-            data.forEach(item => {
-                let card = `<div class="list-card"><div class="error-icon">!</div><b>${item.content}</b><small>${item.date}<br>${item.time || ''}</small>`;
-                if(item.category === '提醒') {
-                    const cleanDate = item.date.split('T')[0].replace(/-/g, '');
-                    // 修復 Safari 下載，改用校正後的 ICS 格式
-                    const ics = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ASUMMARY:${encodeURIComponent(item.content)}%0ADTSTART:${cleanDate}T090000Z%0ADTEND:${cleanDate}T100000Z%0AEND:VEVENT%0AEND:VCALENDAR`;
-                    card += `<a href="${ics}" class="calendar-btn" download="event.ics"><i class="fas fa-calendar-check"></i> 加入 Apple Calendar</a>`;
-                }
-                card += `</div>`;
-                if(item.category === '提醒') rList.innerHTML += card;
-                else wList.innerHTML += card;
-            });
-        } catch (e) { console.error(e); }
+        data.forEach(item => {
+            let card = `
+                <div class="list-card" id="item-${item.id}">
+                    <div class="delete-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></div>
+                    <b>${item.content}</b>
+                    <small>${item.date} ${item.time || ''}</small>`;
+            
+            if(item.category === '提醒') {
+                const cleanDate = item.date.replace(/-/g, '');
+                const ics = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ASUMMARY:${encodeURIComponent(item.content)}%0ADTSTART:${cleanDate}T090000Z%0ADTEND:${cleanDate}T100000Z%0AEND:VEVENT%0AEND:VCALENDAR`;
+                card += `<a href="${ics}" class="calendar-btn" download="event.ics"><i class="fas fa-calendar-check" style="color:#ef4444; margin-right:5px;"></i> 加入 Apple Calendar</a>`;
+            }
+            card += `</div>`;
+            if(item.category === '提醒') rList.innerHTML += card;
+            else wList.innerHTML += card;
+        });
+    }
+
+    async function deleteItem(id) {
+        if(!confirm("確定要刪除這條記錄嗎？")) return;
+        document.getElementById('item-' + id).style.opacity = "0.3";
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify({ action: "delete", id: id })
+        });
+        alert("已刪除！請重新整理頁面。");
+        loadCloudData();
     }
 
     async function addNewItem(type) {
@@ -168,15 +128,13 @@
         if (!content) return;
         const date = prompt("日期 (YYYY-MM-DD)：", new Date().toISOString().split('T')[0]);
         let time = (type === '提醒') ? prompt("時間 (10:00)：", "09:00") : "";
-
         if (content && date) {
-            alert("正在連線雲端...");
             await fetch(SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
-                body: JSON.stringify({ category: type, content, date, time })
+                body: JSON.stringify({ category: type, content: content, date: date, time: time })
             });
-            alert("同步成功！");
+            alert("新增成功！");
             loadCloudData();
         }
     }
