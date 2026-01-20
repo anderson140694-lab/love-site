@@ -8,10 +8,7 @@
     <style>
         :root { --primary-blue: #e3f2fd; --accent-blue: #2196f3; --text-color: #333; }
         body { font-family: sans-serif; background-color: var(--primary-blue); color: var(--text-color); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        
-        /* 預設讓內容完全不顯示，密碼正確才顯示 */
-        #main-wrapper { display: none; width: 100%; display: flex; flex-direction: column; align-items: center; }
-        
+        #main-wrapper { display: none; width: 100%; flex-direction: column; align-items: center; }
         .container { width: 90%; max-width: 400px; text-align: center; padding-top: 50px; }
         .sub-page { display: none; width: 90%; max-width: 400px; padding: 20px; text-align: left; box-sizing: border-box; }
         .counter { background: white; margin: 30px 0; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
@@ -26,8 +23,8 @@
 </head>
 <body>
 
-    <div id="main-wrapper" style="display: none;">
-        <div id="home-page" class="container" style="display: block;">
+    <div id="main-wrapper">
+        <div id="home-page" class="container">
             <h1>偲宸 & 柏鈞</h1>
             <p>自 2025 年 5 月 28 日起</p>
             <div class="counter">
@@ -63,13 +60,12 @@
     </div>
 
 <script>
-    // ！！！在此貼上你的網址，確保有雙引號包裹！！！
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-1wmkwgtXEV7GSN215qdyrDT4r85XuzhfTMSrS_AxUaErjpLnugdEAB1ycsMiHp0U/exec";
+    // 使用你最新的 URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4fiWVeD7oB_l45JUSdKXUfjnl7EKZ6ZyA3bJEnoxpbLn2_6FhpbBs7W9f85rtR1U/exec";
 
-    // 1. 強制執行密碼檢查
-    function initLogin() {
-        const isLogged = sessionStorage.getItem('isLogged');
-        if (isLogged === 'true') {
+    // 1. 密碼驗證 (確保第一步執行)
+    function init() {
+        if (sessionStorage.getItem('isLogged') === 'true') {
             document.getElementById('main-wrapper').style.display = 'flex';
         } else {
             let pass = prompt("請輸入密碼");
@@ -82,7 +78,7 @@
             }
         }
     }
-    initLogin();
+    init();
 
     // 2. 天數計算
     const startDate = new Date(2025, 4, 28); 
@@ -90,16 +86,14 @@
 
     // 3. 切換頁面
     function showPage(id) {
-        // 隱藏所有分頁
         document.getElementById('home-page').style.display = 'none';
         document.getElementById('reminders-page').style.display = 'none';
         document.getElementById('wishes-page').style.display = 'none';
-        // 顯示目標分頁
         document.getElementById(id + '-page').style.display = 'block';
         if(id !== 'home') loadCloudData();
     }
 
-    // 4. 讀取與顯示資料
+    // 4. 讀取資料
     async function loadCloudData() {
         try {
             const res = await fetch(SCRIPT_URL);
@@ -113,17 +107,13 @@
                 if(item.category === '提醒') {
                     const cleanDate = item.date.replace(/-/g, '');
                     const ics = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ASUMMARY:${encodeURIComponent(item.content)}%0ADTSTART:${cleanDate}T090000Z%0ADTEND:${cleanDate}T100000Z%0AEND:VEVENT%0AEND:VCALENDAR`;
-                    card += `<br><a href="${ics}" download="event.ics" style="color:#2196f3; font-size:0.8rem;">📅 加入 Apple Calendar</a>`;
+                    card += `<br><a href="${ics}" download="event.ics" style="color:#2196f3; font-size:0.8rem; text-decoration:none;">📅 加入 Apple Calendar</a>`;
                 }
                 card += `</div>`;
                 if(item.category === '提醒') rList.innerHTML += card;
                 else wList.innerHTML += card;
             });
-            if(!rList.innerHTML) rList.innerHTML = "目前沒有提醒";
-            if(!wList.innerHTML) wList.innerHTML = "目前沒有願望";
-        } catch (e) {
-            console.error("讀取失敗", e);
-        }
+        } catch (e) { console.error(e); }
     }
 
     // 5. 新增資料
@@ -134,13 +124,13 @@
         let time = (type === '提醒') ? prompt("時間 (10:00)：", "09:00") : "";
 
         if (content && date) {
-            alert("正在連線雲端，請稍候...");
+            alert("正在連線雲端...");
             await fetch(SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
                 body: JSON.stringify({ category: type, content, date, time })
             });
-            alert("同步成功！");
+            alert("新增成功！資料處理約需幾秒，請稍後重新整理查看。");
             loadCloudData();
         }
     }
