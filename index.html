@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我們的小時光</title>
+    <style>
+        :root {
+            --primary-color: #ffb6c1; /* 粉紅色調 */
+            --text-color: #555;
+        }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff5f7;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            padding: 20px;
+        }
+        .header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+        .counter {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .days-number {
+            font-size: 3rem;
+            color: #ff6b81;
+            font-weight: bold;
+        }
+        .timeline {
+            text-align: left;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+        }
+        .timeline h3 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+        .event {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <br>
+        <img src="https://via.placeholder.com/150" alt="我們的照片">
+        <h1>小明 & 小美</h1>
+        <p>自 2023 年 5 月 20 日起</p>
+    </div>
+
+    <div class="counter">
+        <p>我們已經在一起</p>
+        <div class="days-number" id="days-count">0</div>
+        <p>DAYS</p>
+    </div>
+
+    <div class="timeline">
+        <h3>重要紀念日</h3>
+        <div class="event"><span>第一次見面</span> <span>2023-04-01</span></div>
+        <div class="event"><span>正式交往</span> <span>2023-05-20</span></div>
+        <div class="event"><span>第一次旅行</span> <span>2023-12-25</span></div>
+    </div>
+</div>
+
+<script>
+    // 設定交往日期 (年, 月-1, 日)
+    const startDate = new Date(2023, 4, 20); // 2023年5月20日
+    const today = new Date();
+    
+    const diffTime = Math.abs(today - startDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    
+    document.getElementById('days-count').innerText = diffDays;
+</script>
+
+</body>
+</html>
