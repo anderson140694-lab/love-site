@@ -6,156 +6,106 @@
     <title>偲宸&柏鈞</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { 
-            --primary-blue: #e3f2fd; 
-            --accent-blue: #2196f3;  
-            --text-color: #333; 
-        }
+        :root { --primary-blue: #e3f2fd; --accent-blue: #2196f3; --text-color: #333; }
+        body { font-family: sans-serif; background-color: var(--primary-blue); color: var(--text-color); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
-        body { 
-            font-family: sans-serif; 
-            background-color: var(--primary-blue); 
-            color: var(--text-color); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            margin: 0; 
-            min-height: 100vh;
-        }
-        
-        #main-content { display: none; width: 90%; max-width: 400px; text-align: center; }
+        /* 基礎佈局 */
+        .container { display: none; width: 90%; max-width: 400px; text-align: center; padding-top: 50px; }
+        .sub-page { display: none; width: 90%; max-width: 400px; padding: 20px; text-align: left; }
 
-        /* 天數卡片 */
-        .counter { 
-            background: rgba(255, 255, 255, 0.9); 
-            margin: 40px 0 20px 0; padding: 30px 20px; 
-            border-radius: 20px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-        }
+        /* 卡片設計 */
+        .counter { background: white; margin: 30px 0; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .days-number { font-size: 3.5rem; color: var(--accent-blue); font-weight: bold; }
 
-        /* 選單佈局 */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .menu-item {
-            background: white;
-            padding: 25px 15px;
-            border-radius: 20px;
-            position: relative;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            cursor: pointer;
-            text-decoration: none;
-            color: var(--text-color);
-        }
-
+        /* 選單按鈕 */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .menu-item { background: white; padding: 25px 10px; border-radius: 20px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; }
         .menu-item i { font-size: 2rem; color: var(--accent-blue); margin-bottom: 10px; }
+        .badge { position: absolute; top: 10px; right: 15px; background: #ff4757; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 50%; }
 
-        /* 鈴鐺右上角的通知數字 */
-        .badge {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: #ff4757;
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 50%;
-            font-weight: bold;
-        }
-
-        /* 願望目標頁面 (隱藏) */
-        #page-wishes { display: none; width: 100%; text-align: left; }
+        /* 返回按鈕與新增按鈕 */
+        .back-btn { font-size: 1.2rem; cursor: pointer; margin-bottom: 20px; display: inline-block; color: var(--accent-blue); }
+        .fab { position: fixed; bottom: 30px; right: 30px; background: var(--accent-blue); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: none; box-shadow: 0 4px 15px rgba(33,150,243,0.4); }
         
-        /* 右下角固定新增按鈕 */
-        .fab {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--accent-blue);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
-            cursor: pointer;
-            border: none;
-        }
+        .list-container { background: white; border-radius: 15px; padding: 15px; min-height: 200px; }
     </style>
 </head>
 <body>
 
-<div id="main-content">
-    <div class="header" style="margin-top: 50px;">
+    <div id="home-page" class="container">
         <h1>偲宸 & 柏鈞</h1>
         <p>自 2025 年 5 月 28 日起</p>
-    </div>
-
-    <div class="counter">
-        <p>我們已經在一起</p>
-        <div class="days-number" id="days-count">0</div>
-        <p>DAYS</p>
-    </div>
-
-    <div class="menu-grid">
-        <div class="menu-item" onclick="alert('提醒功能開發中...')">
-            <i class="fas fa-bell"></i>
-            <div>提醒事項</div>
-            <span class="badge">3</span> </div>
-
-        <div class="menu-item" onclick="showWishes()">
-            <i class="fas fa-piggy-bank"></i>
-            <div>願望 & 目標</div>
+        <div class="counter">
+            <p>我們已經在一起</p>
+            <div class="days-number" id="days-count">0</div>
+            <p>DAYS</p>
+        </div>
+        <div class="menu-grid">
+            <div class="menu-item" onclick="showPage('reminders')">
+                <i class="fas fa-bell"></i>
+                <div>提醒事項</div>
+                <span class="badge">!</span>
+            </div>
+            <div class="menu-item" onclick="showPage('wishes')">
+                <i class="fas fa-star"></i>
+                <div>願望 & 目標</div>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="page-wishes" style="padding: 20px;">
-    <h2 onclick="location.reload()" style="cursor:pointer"><i class="fas fa-chevron-left"></i> 願望清單</h2>
-    <div id="wish-list">
-        <p>目前還沒有願望，點擊右下角新增一個吧！</p>
+    <div id="reminders-page" class="sub-page">
+        <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
+        <h2><i class="fas fa-bell"></i> 提醒事項</h2>
+        <div class="list-container" id="reminder-list">目前無提醒</div>
+        <button class="fab" onclick="addItem('提醒')"><i class="fas fa-plus"></i></button>
     </div>
-    <button class="fab" onclick="addWish()"><i class="fas fa-plus"></i></button>
-</div>
+
+    <div id="wishes-page" class="sub-page">
+        <div class="back-btn" onclick="showPage('home')"><i class="fas fa-chevron-left"></i> 返回</div>
+        <h2><i class="fas fa-star"></i> 願望 & 目標</h2>
+        <div class="list-container" id="wish-list">目前無願望</div>
+        <button class="fab" onclick="addItem('願望')"><i class="fas fa-plus"></i></button>
+    </div>
 
 <script>
-    // 密碼檢查
-    const password = prompt("請輸入密碼");
-    if (password === "0528") {
-        document.getElementById('main-content').style.display = 'block';
+    // 1. 密碼檢查 (使用 sessionStorage 讓返回時不需要重複輸入)
+    if (!sessionStorage.getItem('isLogged')) {
+        const password = prompt("請輸入密碼");
+        if (password === "0528") {
+            sessionStorage.setItem('isLogged', 'true');
+            document.getElementById('home-page').style.display = 'block';
+        } else {
+            alert("密碼錯誤");
+            window.location.reload();
+        }
     } else {
-        alert("密碼錯誤！");
-        window.location.reload();
+        document.getElementById('home-page').style.display = 'block';
     }
 
-    // 天數計算
+    // 2. 切換頁面邏輯
+    function showPage(pageId) {
+        document.getElementById('home-page').style.display = 'none';
+        document.getElementById('reminders-page').style.display = 'none';
+        document.getElementById('wishes-page').style.display = 'none';
+        document.getElementById(pageId + '-page').style.display = 'block';
+    }
+
+    // 3. 計算天數
     const startDate = new Date(2025, 4, 28); 
     const today = new Date();
-    const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)); 
-    document.getElementById('days-count').innerText = diffDays;
+    document.getElementById('days-count').innerText = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
 
-    // 切換到願望頁面
-    function showWishes() {
-        document.getElementById('main-content').style.display = 'none';
-        document.getElementById('page-wishes').style.display = 'block';
-    }
-
-    // 新增願望的動作
-    function addWish() {
-        const wish = prompt("輸入你的願望或目標：");
-        if (wish) {
-            alert("你輸入了：" + wish + "\n(下一階段我將教你如何連結 Google Sheets 真正儲存它！)");
+    // 4. 新增功能 (目前僅為模擬提示)
+    function addItem(type) {
+        if (type === '提醒') {
+            const title = prompt("事項名稱：");
+            const date = prompt("日期 (YYYY-MM-DD)：");
+            if(title) alert("已收到：" + title + " (" + date + ")\n接下來將教你連結資料庫來儲存它！");
+        } else {
+            const wish = prompt("想達成什麼願望？");
+            if(wish) alert("願望已記錄：" + wish);
         }
     }
 </script>
-
 </body>
 </html>
