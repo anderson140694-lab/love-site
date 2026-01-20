@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>偲宸&柏鈞</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { 
             --primary-blue: #e3f2fd; 
@@ -19,56 +20,81 @@
             flex-direction: column; 
             align-items: center; 
             margin: 0; 
-            height: 100vh;
+            min-height: 100vh;
         }
         
-        #main-content { 
-            display: none; 
-            width: 90%; 
-            max-width: 400px; 
-            text-align: center; 
-            padding: 20px; 
-        }
-        
-        .header {
-            margin-top: 50px;
-        }
+        #main-content { display: none; width: 90%; max-width: 400px; text-align: center; }
 
+        /* 天數卡片 */
         .counter { 
-            background: rgba(255, 255, 255, 0.8); 
-            margin: 30px 0; padding: 40px 20px; 
+            background: rgba(255, 255, 255, 0.9); 
+            margin: 40px 0 20px 0; padding: 30px 20px; 
             border-radius: 20px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
         }
+        .days-number { font-size: 3.5rem; color: var(--accent-blue); font-weight: bold; }
 
-        .days-number { 
-            font-size: 3.5rem; 
-            color: var(--accent-blue); 
-            font-weight: bold; 
-        }
-
-        .enter-btn {
-            background-color: var(--accent-blue);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
-            transition: transform 0.2s;
+        /* 選單佈局 */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
             margin-top: 20px;
         }
 
-        .enter-btn:active {
-            transform: scale(0.95);
+        .menu-item {
+            background: white;
+            padding: 25px 15px;
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .menu-item i { font-size: 2rem; color: var(--accent-blue); margin-bottom: 10px; }
+
+        /* 鈴鐺右上角的通知數字 */
+        .badge {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #ff4757;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+
+        /* 願望目標頁面 (隱藏) */
+        #page-wishes { display: none; width: 100%; text-align: left; }
+        
+        /* 右下角固定新增按鈕 */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent-blue);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+            cursor: pointer;
+            border: none;
         }
     </style>
 </head>
 <body>
 
 <div id="main-content">
-    <div class="header">
+    <div class="header" style="margin-top: 50px;">
         <h1>偲宸 & 柏鈞</h1>
         <p>自 2025 年 5 月 28 日起</p>
     </div>
@@ -79,27 +105,55 @@
         <p>DAYS</p>
     </div>
 
-    <button class="enter-btn" onclick="enterNextPage()">點擊進入</button>
+    <div class="menu-grid">
+        <div class="menu-item" onclick="alert('提醒功能開發中...')">
+            <i class="fas fa-bell"></i>
+            <div>提醒事項</div>
+            <span class="badge">3</span> </div>
+
+        <div class="menu-item" onclick="showWishes()">
+            <i class="fas fa-piggy-bank"></i>
+            <div>願望 & 目標</div>
+        </div>
+    </div>
+</div>
+
+<div id="page-wishes" style="padding: 20px;">
+    <h2 onclick="location.reload()" style="cursor:pointer"><i class="fas fa-chevron-left"></i> 願望清單</h2>
+    <div id="wish-list">
+        <p>目前還沒有願望，點擊右下角新增一個吧！</p>
+    </div>
+    <button class="fab" onclick="addWish()"><i class="fas fa-plus"></i></button>
 </div>
 
 <script>
-    // 2. 密碼提示語修改
+    // 密碼檢查
     const password = prompt("請輸入密碼");
     if (password === "0528") {
         document.getElementById('main-content').style.display = 'block';
     } else {
         alert("密碼錯誤！");
+        window.location.reload();
     }
 
-    // 日期計算邏輯
+    // 天數計算
     const startDate = new Date(2025, 4, 28); 
     const today = new Date();
-    const diffTime = today - startDate;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
+    const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)); 
     document.getElementById('days-count').innerText = diffDays;
 
-    function enterNextPage() {
-        alert("即將進入選項頁面...（等候你告訴我下一步要加什麼內容！）");
+    // 切換到願望頁面
+    function showWishes() {
+        document.getElementById('main-content').style.display = 'none';
+        document.getElementById('page-wishes').style.display = 'block';
+    }
+
+    // 新增願望的動作
+    function addWish() {
+        const wish = prompt("輸入你的願望或目標：");
+        if (wish) {
+            alert("你輸入了：" + wish + "\n(下一階段我將教你如何連結 Google Sheets 真正儲存它！)");
+        }
     }
 </script>
 
