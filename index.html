@@ -7,52 +7,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --bj-blue: #0095f6; --sc-pink: #fd5d93; --th-gray: #f5f5f5; }
-        body { font-family: -apple-system, sans-serif; background: #fff; margin: 0; padding-bottom: 80px; }
-        #main-wrapper { display: none; flex-direction: column; align-items: center; }
+        /* 效能優化：開啟硬體加速 */
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #fff; margin: 0; padding-bottom: 80px; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+        #main-wrapper { display: none; flex-direction: column; align-items: center; will-change: contents; }
+        
         .container { width: 90%; max-width: 400px; text-align: center; padding-top: 30px; }
         .days-number { font-size: 4.5rem; color: #ff4757; font-weight: 800; letter-spacing: -2px; }
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; margin-top: 20px; }
-        .menu-item { background: #fff; padding: 25px; border-radius: 25px; border: 1px solid #eee; text-align: center; cursor: pointer; }
         
-        /* 互動區樣式 */
-        .memory-card { background: white; margin-bottom: 30px; border-bottom: 1px solid #eee; }
-        .memory-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .action-bar { padding: 10px 15px; display: flex; gap: 15px; font-size: 1.4rem; }
-        .action-btn { cursor: pointer; transition: 0.2s; }
-        .action-btn:active { transform: scale(1.2); }
+        /* 選單優化 */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; margin-top: 20px; }
+        .menu-item { background: #fff; padding: 25px; border-radius: 25px; border: 1px solid #eee; text-align: center; cursor: pointer; transition: transform 0.1s; }
+        .menu-item:active { transform: scale(0.95); }
+
+        /* 卡片優化 */
+        .memory-card { background: white; margin-bottom: 25px; border-bottom: 1px solid #f0f0f0; position: relative; will-change: transform; transform: translateZ(0); }
+        .memory-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #fafafa; display: block; }
+        
+        .action-bar { padding: 12px 15px; display: flex; gap: 18px; font-size: 1.5rem; }
+        .action-btn { cursor: pointer; transition: 0.1s; }
         .fa-heart.active { color: #ff4757; }
         
-        .comment-section { padding: 0 15px 15px; font-size: 0.9rem; }
-        .comment-item { margin-top: 5px; }
-        .comment-user { font-weight: bold; margin-right: 5px; }
-        .comment-input-group { display: flex; margin-top: 10px; gap: 5px; }
-        .comment-input { flex: 1; border: 1px solid #eee; border-radius: 20px; padding: 8px 12px; font-size: 0.85rem; }
+        .comment-section { padding: 0 15px 15px; font-size: 0.92rem; }
+        .comment-user { font-weight: bold; margin-right: 6px; }
+        .comment-input-group { display: flex; margin-top: 12px; border: 1px solid #eee; border-radius: 25px; padding: 5px 15px; background: #fafafa; }
+        .comment-input { flex: 1; border: none; background: none; padding: 8px 0; outline: none; font-size: 0.9rem; }
 
-        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; }
-        .modal-content { background:white; width:85%; max-width:330px; padding:25px; border-radius:30px; }
-        .btn-black { background:#000; color:#fff; border:none; width:100%; padding:15px; border-radius:15px; font-weight:bold; }
-        .fab { position: fixed; bottom: 30px; right: 30px; background: #000; color: white; width: 62px; height: 62px; border-radius: 31px; display: flex; align-items: center; justify-content: center; z-index: 100; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; backdrop-filter: blur(4px); }
+        .modal-content { background:white; width:85%; max-width:330px; padding:25px; border-radius:30px; transform: translateZ(0); }
+        .btn-black { background:#000; color:#fff; border:none; width:100%; padding:16px; border-radius:18px; font-weight:bold; }
+        .fab { position: fixed; bottom: 30px; right: 30px; background: #000; color: white; width: 62px; height: 62px; border-radius: 31px; display: flex; align-items: center; justify-content: center; z-index: 100; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
     </style>
 </head>
 <body>
 
 <div id="main-wrapper">
     <div id="home-page" class="container">
-        <h2>偲宸 & 柏鈞</h2>
+        <h2 style="margin:0;">偲宸 & 柏鈞</h2>
         <div class="days-number" id="days-count">0</div>
         <div class="menu-grid">
-            <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell" style="color:#ff9f43;"></i><div>提醒</div></div>
-            <div class="menu-item" onclick="showPage('memories')"><i class="fas fa-camera-retro" style="color:#e6683c;"></i><div>一起做過的事</div></div>
-            <div class="menu-item" onclick="showPage('food')"><i class="fas fa-heart" style="color:#ee5253;"></i><div>喜歡的餐廳</div></div>
-            <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star" style="color:#feca57;"></i><div>願望</div></div>
-            <div class="menu-item" onclick="showPage('improve')"><i class="fas fa-wrench" style="color:#54a0ff;"></i><div>改善</div></div>
-            <div class="menu-item" onclick="showPage('merit')"><i class="fas fa-thumbs-up" style="color:#1dd1a1;"></i><div>優點</div></div>
+            <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell" style="color:#ff9f43; font-size:1.8rem;"></i><div>提醒</div></div>
+            <div class="menu-item" onclick="showPage('memories')"><i class="fas fa-camera-retro" style="color:#e6683c; font-size:1.8rem;"></i><div>一起做過的事</div></div>
+            <div class="menu-item" onclick="showPage('food')"><i class="fas fa-heart" style="color:#ee5253; font-size:1.8rem;"></i><div>喜歡的餐廳</div></div>
+            <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star" style="color:#feca57; font-size:1.8rem;"></i><div>願望</div></div>
+            <div class="menu-item" onclick="showPage('improve')"><i class="fas fa-wrench" style="color:#54a0ff; font-size:1.8rem;"></i><div>改善</div></div>
+            <div class="menu-item" onclick="showPage('merit')"><i class="fas fa-thumbs-up" style="color:#1dd1a1; font-size:1.8rem;"></i><div>優點</div></div>
         </div>
     </div>
 
     <div id="sub-page-container" style="display:none; width:100%; max-width:450px;">
-        <div onclick="showPage('home')" style="padding:15px; cursor:pointer; color:#bbb; font-weight:bold;"><i class="fas fa-chevron-left"></i> 返回主頁</div>
-        <h2 id="page-title" style="padding-left:15px;"></h2>
+        <div onclick="showPage('home')" style="padding:15px; cursor:pointer; color:#bbb; font-weight:bold;"><i class="fas fa-chevron-left"></i> 返回</div>
+        <h2 id="page-title" style="margin:0 0 10px 15px;"></h2>
         <div id="list-content"></div>
         <button class="fab" onclick="openModal()"><i class="fas fa-plus"></i></button>
     </div>
@@ -61,16 +65,16 @@
 <div id="inputModal" class="modal">
     <div class="modal-content">
         <h3 style="margin-top:0;">新增紀錄</h3>
-        <select id="input-user"><option value="柏鈞">柏鈞</option><option value="偲宸">偲宸</option></select>
+        <select id="input-user" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px;"><option value="柏鈞">柏鈞</option><option value="偲宸">偲宸</option></select>
         <div id="memory-fields" style="display:none;">
-            <input type="file" id="input-file" accept="image/*" style="margin:10px 0;">
-            <input type="date" id="input-date">
-            <textarea id="input-content" placeholder="這張照片的故事..." style="width:100%; height:80px; margin-top:10px;"></textarea>
+            <input type="file" id="input-file" accept="image/*" style="margin-bottom:10px;">
+            <input type="date" id="input-date" style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
+            <textarea id="input-content" placeholder="這張照片的故事..." style="width:100%; height:80px; padding:10px; box-sizing:border-box; border-radius:10px;"></textarea>
         </div>
         <div id="card-fields" style="display:none;">
-            <input type="text" id="card-content" placeholder="內容..." style="width:100%; padding:10px; box-sizing:border-box;">
+            <input type="text" id="card-content" placeholder="內容..." style="width:100%; padding:12px; box-sizing:border-box; border-radius:10px; border:1px solid #eee;">
         </div>
-        <button class="btn-black" style="margin-top:15px;" onclick="submitData()">發布</button>
+        <button id="submit-btn" class="btn-black" style="margin-top:15px;" onclick="submitData()">發布</button>
         <button style="width:100%; background:none; border:none; color:#ccc; margin-top:10px;" onclick="closeModal()">取消</button>
     </div>
 </div>
@@ -88,7 +92,7 @@
             if (p === "0528") { 
                 let name = prompt("妳/你是誰？(輸入: 偲宸 或 柏鈞)");
                 sessionStorage.setItem('isLogged', 'true');
-                sessionStorage.setItem('userName', name);
+                sessionStorage.setItem('userName', name || "柏鈞");
                 location.reload();
             } else location.reload();
         }
@@ -109,54 +113,94 @@
 
     async function loadData() {
         const container = document.getElementById('list-content');
-        container.innerHTML = "<p style='text-align:center; color:#ccc;'>讀取中...</p>";
-        const res = await fetch(SCRIPT_URL);
-        const allData = await res.json();
-        container.innerHTML = "";
-
-        const items = (currentPage === 'memories') ? allData.memories : allData.cards.filter(i => i.category === {reminders:'提醒', food:'喜歡的餐廳', wishes:'願望', improve:'改善', merit:'優點'}[currentPage]);
-        
-        items.reverse().forEach(item => {
-            let commentHtml = item.comments.map(c => `<div class="comment-item"><span class="comment-user">${c.user}</span>${c.text}</div>`).join('');
+        container.innerHTML = "<p style='text-align:center; color:#ccc; padding-top:50px;'><i class='fas fa-spinner fa-spin'></i> 加載中...</p>";
+        try {
+            const res = await fetch(SCRIPT_URL);
+            const allData = await res.json();
+            container.innerHTML = "";
+            const items = (currentPage === 'memories') ? allData.memories : allData.cards.filter(i => i.category === {reminders:'提醒', food:'喜歡的餐廳', wishes:'願望', improve:'改善', merit:'優點'}[currentPage]);
             
-            if (currentPage === 'memories') {
-                container.innerHTML += `
-                    <div class="memory-card">
-                        <div style="padding:12px;"><b>${item.user}</b></div>
-                        <img class="memory-img" src="${item.info}">
-                        <div class="action-bar">
-                            <i class="fas fa-heart action-btn ${item.likes > 0 ? 'active' : ''}" onclick="handleLike(${item.id}, 'memory')"></i>
-                            <i class="far fa-comment action-btn"></i>
-                        </div>
-                        <div style="padding:0 15px;"><b>${item.likes} 個讚</b></div>
-                        <div class="comment-section">
-                            <div style="margin-bottom:8px;"><span class="comment-user">${item.user}</span>${item.content}</div>
-                            ${commentHtml}
-                            <div class="comment-input-group">
-                                <input type="text" id="cmt-${item.id}" class="comment-input" placeholder="新增留言...">
-                                <button onclick="sendComment(${item.id}, 'memory')" style="border:none; background:none; color:var(--bj-blue); font-weight:bold;">發佈</button>
+            items.reverse().forEach(item => {
+                let commentHtml = (item.comments || []).map(c => `<div style="margin-top:4px;"><span class="comment-user">${c.user}</span>${c.text}</div>`).join('');
+                if (currentPage === 'memories') {
+                    container.innerHTML += `
+                        <div class="memory-card">
+                            <div style="padding:12px; font-weight:bold;">${item.user}</div>
+                            <img class="memory-img" src="${item.info}" loading="lazy">
+                            <div class="action-bar">
+                                <i class="fas fa-heart action-btn ${item.likes > 0 ? 'active' : ''}" onclick="handleLike(${item.id})"></i>
+                                <i class="far fa-comment action-btn"></i>
                             </div>
-                        </div>
-                    </div>`;
-            } else {
-                container.innerHTML += `
-                    <div style="padding:15px; border-bottom:1px solid #eee;">
-                        <b>${item.user}</b>: ${item.content}
-                        <div style="font-size:0.7rem; color:#ccc;">${item.date}</div>
-                    </div>`;
-            }
+                            <div style="padding:0 15px; font-weight:bold; font-size:0.9rem;">${item.likes || 0} 個讚</div>
+                            <div class="comment-section">
+                                <div style="margin-bottom:8px;"><span class="comment-user">${item.user}</span>${item.content}</div>
+                                ${commentHtml}
+                                <div class="comment-input-group">
+                                    <input type="text" id="cmt-${item.id}" class="comment-input" placeholder="新增留言...">
+                                    <button onclick="sendComment(${item.id})" style="border:none; background:none; color:var(--bj-blue); font-weight:bold; padding-left:10px;">發佈</button>
+                                </div>
+                            </div>
+                        </div>`;
+                } else {
+                    container.innerHTML += `<div style="padding:15px; border-bottom:1px solid #f9f9f9;"><b>${item.user}</b>: ${item.content}</div>`;
+                }
+            });
+        } catch(e) { container.innerHTML = "<p style='text-align:center; color:red;'>讀取失敗，請重新整理</p>"; }
+    }
+
+    // 圖片壓縮核心邏輯
+    async function compressImage(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const max = 800; // 最大邊長 800px，兼顧畫質與速度
+                    if (width > height && width > max) { height *= max / width; width = max; }
+                    else if (height > max) { width *= max / height; height = max; }
+                    canvas.width = width;
+                    canvas.height = height;
+                    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.7)); // 畫質設定 0.7
+                };
+            };
         });
     }
 
-    async function handleLike(id, target) {
-        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action:"like", id, target }) });
+    async function submitData() {
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true; btn.innerText = "處理中...";
+        const user = document.getElementById('input-user').value;
+        const payload = { user, target: (currentPage==='memories'?'memory':'card') };
+        
+        if (currentPage === 'memories') {
+            const file = document.getElementById('input-file').files[0];
+            if (!file) { btn.disabled = false; return alert("請選擇照片"); }
+            payload.photo = await compressImage(file);
+            payload.content = document.getElementById('input-content').value;
+            payload.date = document.getElementById('input-date').value;
+        } else {
+            payload.category = {reminders:'提醒', food:'喜歡的餐廳', wishes:'願望', improve:'改善', merit:'優點'}[currentPage];
+            payload.content = document.getElementById('card-content').value;
+        }
+        await sendPost(payload);
+        btn.disabled = false; btn.innerText = "發布";
+    }
+
+    async function handleLike(id) {
+        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action:"like", id, target: "memory" }) });
         loadData();
     }
 
-    async function sendComment(id, target) {
+    async function sendComment(id) {
         const text = document.getElementById(`cmt-${id}`).value;
         if(!text) return;
-        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action:"addComment", id, target, user: currentUser, text }) });
+        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action:"addComment", id, target: "memory", user: currentUser, text }) });
         loadData();
     }
 
@@ -167,31 +211,10 @@
     }
     function closeModal() { document.getElementById('inputModal').style.display='none'; }
 
-    async function submitData() {
-        const user = document.getElementById('input-user').value;
-        const payload = { user, target: (currentPage==='memories'?'memory':'card') };
-        if (currentPage === 'memories') {
-            const file = document.getElementById('input-file').files[0];
-            if (!file) return alert("請選擇照片");
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = async () => {
-                payload.photo = reader.result;
-                payload.content = document.getElementById('input-content').value;
-                payload.date = document.getElementById('input-date').value;
-                await sendPost(payload);
-            };
-        } else {
-            payload.category = {reminders:'提醒', food:'喜歡的餐廳', wishes:'願望', improve:'改善', merit:'優點'}[currentPage];
-            payload.content = document.getElementById('card-content').value;
-            await sendPost(payload);
-        }
-    }
-
     async function sendPost(data) {
         closeModal();
         await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
-        setTimeout(loadData, 2000);
+        setTimeout(loadData, 1500);
     }
 </script>
 </body>
