@@ -17,24 +17,26 @@
         .menu-item { background: #fff; padding: 25px; border-radius: 25px; border: 1px solid #eee; text-align: center; cursor: pointer; transition: 0.1s; }
         .menu-item:active { transform: scale(0.95); }
         
-        /* 卡片與 IG 樣式 */
-        .list-card { background: white; border-radius: 22px; padding: 20px; margin-bottom: 15px; border: 1px solid #f0f0f0; position: relative; transform: translateZ(0); }
+        /* 日期選擇器與輸入框樣式優化 */
+        label { display: block; text-align: left; font-size: 0.85rem; color: #666; margin: 10px 0 2px 5px; }
+        input[type="date"], input[type="file"], input[type="text"], textarea, select { 
+            width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 12px; 
+            background: #fafafa; box-sizing: border-box; font-size: 1rem; -webkit-appearance: none;
+        }
+
+        .list-card { background: white; border-radius: 22px; padding: 20px; margin-bottom: 15px; border: 1px solid #f0f0f0; position: relative; }
         .card-bj { border-left: 6px solid var(--bj-blue); }
         .card-sc { border-left: 6px solid var(--sc-pink); }
-        .user-tag { font-size: 0.75rem; font-weight: bold; padding: 3px 10px; border-radius: 8px; margin-bottom: 10px; display: inline-block; }
-        .tag-bj { background: #e1f5fe; color: var(--bj-blue); }
-        .tag-sc { background: #fce4ec; color: var(--sc-pink); }
 
+        /* IG 風格回憶相簿 */
         .memory-card { background: white; margin-bottom: 25px; border-bottom: 1px solid #eee; text-align: left; }
-        .memory-header { padding: 12px; display: flex; align-items: center; justify-content: space-between; }
+        .memory-header { padding: 12px; font-weight: bold; display: flex; align-items: center; justify-content: space-between; }
         .memory-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #eee; }
         .memory-info { padding: 15px; line-height: 1.5; }
         
-        .cal-link { font-size: 0.8rem; color: #0095f6; background: #f0f9ff; padding: 6px 12px; border-radius: 15px; display: inline-block; margin-top: 10px; text-decoration: none; cursor: pointer; }
         .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; backdrop-filter: blur(4px); }
-        .modal-content { background:white; width:85%; max-width:330px; padding:25px; border-radius:30px; }
-        select, input, textarea { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; background: #fafafa; box-sizing: border-box; font-size: 1rem; }
-        .btn-black { background:#000; color:#fff; border:none; width:100%; padding:16px; border-radius:18px; font-weight:bold; cursor: pointer; }
+        .modal-content { background:white; width:85%; max-width:330px; padding:25px; border-radius:30px; max-height: 90vh; overflow-y: auto; }
+        .btn-black { background:#000; color:#fff; border:none; width:100%; padding:16px; border-radius:18px; font-weight:bold; cursor: pointer; margin-top: 10px; }
         .fab { position: fixed; bottom: 30px; right: 30px; background: #000; color: white; width: 62px; height: 62px; border-radius: 31px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; z-index: 100; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     </style>
 </head>
@@ -46,7 +48,7 @@
         <div class="days-number" id="days-count">0</div>
         <div class="menu-grid">
             <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell" style="color:#ff9f43; font-size:1.8rem;"></i><div>提醒</div></div>
-            <div class="menu-item" onclick="showPage('memories')"><i class="fas fa-camera-retro" style="color:#e6683c; font-size:1.8rem;"></i><div>一起坐過的事</div></div>
+            <div class="menu-item" onclick="showPage('memories')"><i class="fas fa-camera-retro" style="color:#e6683c; font-size:1.8rem;"></i><div>一起做過的事</div></div>
             <div class="menu-item" onclick="showPage('food')"><i class="fas fa-heart" style="color:#ee5253; font-size:1.8rem;"></i><div>喜歡的餐廳</div></div>
             <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star" style="color:#feca57; font-size:1.8rem;"></i><div>願望</div></div>
             <div class="menu-item" onclick="showPage('improve')"><i class="fas fa-wrench" style="color:#54a0ff; font-size:1.8rem;"></i><div>改善</div></div>
@@ -65,27 +67,30 @@
 <div id="inputModal" class="modal">
     <div class="modal-content">
         <h3 style="margin-top:0;">新增紀錄</h3>
+        <label>發布者</label>
         <select id="input-user"><option value="柏鈞">柏鈞</option><option value="偲宸">偲宸</option></select>
+        
         <div id="memory-fields" style="display:none;">
-            <label style="font-size:0.8rem; color:#999;">上傳照片：</label>
+            <label>選擇照片</label>
             <input type="file" id="input-file" accept="image/*">
+            <label>日期</label>
             <input type="date" id="input-date">
-            <textarea id="input-content" placeholder="這張照片的故事..."></textarea>
+            <label>回憶故事</label>
+            <textarea id="input-content" placeholder="寫下當時的心情..."></textarea>
         </div>
+
         <div id="card-fields" style="display:none;">
-            <input type="text" id="card-content" placeholder="內容...">
-            <div id="reminder-time-fields" style="display:none;">
-                <input type="date" id="card-date">
-                <input type="time" id="card-time" value="09:00">
-                <input type="time" id="card-endtime" value="10:00">
-            </div>
+            <label>內容</label>
+            <input type="text" id="card-content" placeholder="輸入內容...">
         </div>
+
         <button class="btn-black" onclick="submitData()">發布</button>
         <button style="width:100%; background:none; border:none; color:#ccc; margin-top:10px;" onclick="closeModal()">取消</button>
     </div>
 </div>
 
 <script>
+    // 已更新為你最新的 Web App URL
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHIFk7eE9XDQg-DOyiU5Q62TWt84MnlP590nAT3kGwBydZ7J7PZed6RhOobCAnV7TN/exec";
     let currentPage = "";
 
@@ -113,7 +118,7 @@
 
     async function loadData() {
         const container = document.getElementById('list-content');
-        container.innerHTML = "<p style='text-align:center; color:#ccc;'><i class='fas fa-spinner fa-spin'></i> 讀取中...</p>";
+        container.innerHTML = "<p style='text-align:center; color:#ccc;'>讀取中...</p>";
         const res = await fetch(SCRIPT_URL);
         const allData = await res.json();
         container.innerHTML = "";
@@ -122,7 +127,7 @@
             allData.memories.reverse().forEach(item => {
                 container.innerHTML += `
                     <div class="memory-card">
-                        <div class="memory-header"><b>${item.user}</b> <i class="fas fa-trash-can" style="color:#eee" onclick="deleteItem(${item.id}, 'memory')"></i></div>
+                        <div class="memory-header"><span>${item.user}</span> <i class="fas fa-ellipsis-h" style="color:#ccc"></i></div>
                         <img class="memory-img" src="${item.info}">
                         <div class="memory-info">
                             <span style="font-weight:700;">${item.user}</span> ${item.content}<br>
@@ -133,14 +138,10 @@
         } else {
             const catMap = { reminders:'提醒', food:'喜歡的餐廳', wishes:'願望', improve:'改善', merit:'優點' };
             allData.cards.filter(i => i.category === catMap[currentPage]).reverse().forEach(item => {
-                const isRem = currentPage === 'reminders';
                 container.innerHTML += `
                     <div class="list-card ${item.user === '柏鈞' ? 'card-bj' : 'card-sc'}">
-                        <span class="user-tag ${item.user === '柏鈞' ? 'tag-bj' : 'tag-sc'}">${item.user}</span>
                         <div style="font-weight:700; font-size:1.1rem;">${item.content}</div>
-                        <div style="font-size:0.8rem; color:#aaa; margin-top:5px;">${item.date} ${item.info} ${item.endTime ? '~ '+item.endTime : ''}</div>
-                        ${isRem ? `<div class="cal-link" onclick="addToCalendar('${item.content}','${item.date}','${item.info}','${item.endTime}')"><i class="far fa-calendar-plus"></i> 加入行事曆</div>` : ''}
-                        <i class="fas fa-trash-can" style="position:absolute; top:20px; right:20px; color:#eee" onclick="deleteItem(${item.id}, 'card')"></i>
+                        <div style="font-size:0.8rem; color:#aaa; margin-top:5px;">${item.date} ${item.user}</div>
                     </div>`;
             });
         }
@@ -150,7 +151,8 @@
         document.getElementById('inputModal').style.display='flex';
         document.getElementById('memory-fields').style.display = (currentPage === 'memories') ? 'block' : 'none';
         document.getElementById('card-fields').style.display = (currentPage !== 'memories') ? 'block' : 'none';
-        document.getElementById('reminder-time-fields').style.display = (currentPage === 'reminders') ? 'block' : 'none';
+        // 預設日期為今天
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
     }
     function closeModal() { document.getElementById('inputModal').style.display='none'; }
 
@@ -166,7 +168,7 @@
             reader.onload = async () => {
                 payload.photo = reader.result;
                 payload.content = document.getElementById('input-content').value;
-                payload.date = document.getElementById('input-date').value || new Date().toISOString().split('T')[0];
+                payload.date = document.getElementById('input-date').value;
                 payload.category = "回憶";
                 await sendPost(payload);
             };
@@ -174,11 +176,7 @@
             const catMap = { reminders:'提醒', food:'喜歡的餐廳', wishes:'願望', improve:'改善', merit:'優點' };
             payload.category = catMap[currentPage];
             payload.content = document.getElementById('card-content').value;
-            if(currentPage === 'reminders') {
-                payload.date = document.getElementById('card-date').value;
-                payload.time = document.getElementById('card-time').value;
-                payload.endTime = document.getElementById('card-endtime').value;
-            }
+            payload.date = new Date().toLocaleDateString();
             await sendPost(payload);
         }
     }
@@ -187,24 +185,6 @@
         closeModal();
         await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
         setTimeout(loadData, 2000);
-    }
-
-    async function deleteItem(id, target) {
-        if(!confirm("確定要刪除嗎？")) return;
-        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({action:"delete", id:id, target:target}) });
-        setTimeout(loadData, 1000);
-    }
-
-    function addToCalendar(title, dateStr, startT, endT) {
-        const date = dateStr.replace(/\//g,''); 
-        const s = startT.replace(':','') + '00';
-        const e = (endT || startT).replace(':','') + '00';
-        const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${title}\nDTSTART:${date}T${s}\nDTEND:${date}T${e}\nEND:VEVENT\nEND:VCALENDAR`;
-        const blob = new Blob([ics], {type: 'text/calendar;charset=utf-8'});
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = 'event.ics';
-        link.click();
     }
 </script>
 </body>
