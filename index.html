@@ -7,9 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --bj-blue: #0095f6; --sc-pink: #fd5d93; --th-gray: #f5f5f5; }
-        /* 效能優化：開啟硬體加速 */
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #fff; margin: 0; padding-bottom: 80px; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
-        #main-wrapper { display: none; flex-direction: column; align-items: center; will-change: contents; }
+        body { font-family: -apple-system, sans-serif; background: #fff; margin: 0; padding-bottom: 80px; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+        #main-wrapper { display: none; flex-direction: column; align-items: center; }
         
         .container { width: 90%; max-width: 400px; text-align: center; padding-top: 30px; }
         .days-number { font-size: 4.5rem; color: #ff4757; font-weight: 800; letter-spacing: -2px; }
@@ -19,23 +18,36 @@
         .menu-item { background: #fff; padding: 25px; border-radius: 25px; border: 1px solid #eee; text-align: center; cursor: pointer; transition: transform 0.1s; }
         .menu-item:active { transform: scale(0.95); }
 
-        /* 卡片優化 */
-        .memory-card { background: white; margin-bottom: 25px; border-bottom: 1px solid #f0f0f0; position: relative; will-change: transform; transform: translateZ(0); }
-        .memory-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #fafafa; display: block; }
+        /* 卡片與回憶錄優化 */
+        .list-card, .memory-card { background: white; border-radius: 22px; padding: 20px; margin-bottom: 15px; border: 1px solid #f0f0f0; position: relative; transform: translateZ(0); }
+        .card-bj { border-left: 6px solid var(--bj-blue); }
+        .card-sc { border-left: 6px solid var(--sc-pink); }
+        .memory-card { padding: 0; overflow: hidden; border-left: none; }
         
-        .action-bar { padding: 12px 15px; display: flex; gap: 18px; font-size: 1.5rem; }
-        .action-btn { cursor: pointer; transition: 0.1s; }
-        .fa-heart.active { color: #ff4757; }
-        
-        .comment-section { padding: 0 15px 15px; font-size: 0.92rem; }
-        .comment-user { font-weight: bold; margin-right: 6px; }
-        .comment-input-group { display: flex; margin-top: 12px; border: 1px solid #eee; border-radius: 25px; padding: 5px 15px; background: #fafafa; }
-        .comment-input { flex: 1; border: none; background: none; padding: 8px 0; outline: none; font-size: 0.9rem; }
+        .user-tag { font-size: 0.75rem; font-weight: bold; padding: 3px 10px; border-radius: 8px; margin-bottom: 10px; display: inline-block; }
+        .tag-bj { background: #e1f5fe; color: var(--bj-blue); }
+        .tag-sc { background: #fce4ec; color: var(--sc-pink); }
 
+        .img-container { width: 100%; aspect-ratio: 1/1; background: #eee; }
+        .memory-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
+
+        .interaction-row { display: flex; gap: 18px; margin-top: 15px; color: #444; font-size: 0.95rem; }
+        .interaction-item { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        
+        /* 留言區 */
+        .comment-area { display: none; margin-top: 15px; padding: 15px; border-top: 1px solid #f8f8f8; }
+        .thread-msg { display: flex; gap: 12px; margin-bottom: 12px; text-align: left; }
+        .thread-avatar { width: 32px; height: 32px; border-radius: 50%; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; flex-shrink: 0; }
+        .thread-bubble { background: var(--th-gray); padding: 12px 16px; border-radius: 20px; font-size: 0.9rem; flex-grow: 1; line-height: 1.4; }
+
+        /* 彈窗 */
         .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; backdrop-filter: blur(4px); }
-        .modal-content { background:white; width:85%; max-width:330px; padding:25px; border-radius:30px; transform: translateZ(0); }
-        .btn-black { background:#000; color:#fff; border:none; width:100%; padding:16px; border-radius:18px; font-weight:bold; }
-        .fab { position: fixed; bottom: 30px; right: 30px; background: #000; color: white; width: 62px; height: 62px; border-radius: 31px; display: flex; align-items: center; justify-content: center; z-index: 100; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .modal-content { background:white; width:85%; max-width:330px; padding:25px; border-radius:30px; }
+        select, input, textarea { width:100%; padding:15px; margin:10px 0; border:1px solid #eee; border-radius:15px; background: #fafafa; font-size: 1rem; box-sizing: border-box; }
+        .btn-black { background:#000; color:#fff; border:none; width:100%; padding:16px; border-radius:18px; font-weight:bold; cursor: pointer; }
+
+        .cal-link { font-size: 0.85rem; color: #0095f6; background: #f0f9ff; padding: 7px 15px; border-radius: 20px; display: inline-block; margin-top: 12px; font-weight: 600; text-decoration: none; cursor: pointer; }
+        .fab { position: fixed; bottom: 30px; right: 30px; background: #000; color: white; width: 62px; height: 62px; border-radius: 31px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; z-index: 100; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
@@ -44,57 +56,69 @@
     <div id="home-page" class="container">
         <h2 style="margin:0;">偲宸 & 柏鈞</h2>
         <div class="days-number" id="days-count">0</div>
+        <p style="color:#999; font-weight:700; font-size:0.85rem; margin:0;">DAYS SINCE 2025/05/28</p>
         <div class="menu-grid">
             <div class="menu-item" onclick="showPage('reminders')"><i class="fas fa-bell" style="color:#ff9f43; font-size:1.8rem;"></i><div>提醒</div></div>
-            <div class="menu-item" onclick="showPage('memories')"><i class="fas fa-camera-retro" style="color:#e6683c; font-size:1.8rem;"></i><div>一起做過的事</div></div>
-            <div class="menu-item" onclick="showPage('food')"><i class="fas fa-heart" style="color:#ee5253; font-size:1.8rem;"></i><div>喜歡的餐廳</div></div>
+            <div class="menu-item" onclick="showPage('memories')"><i class="fas fa-camera-retro" style="color:#e6683c; font-size:1.8rem;"></i><div>回憶</div></div>
+            <div class="menu-item" onclick="showPage('food')"><i class="fas fa-heart" style="color:#ee5253; font-size:1.8rem;"></i><div>餐廳</div></div>
             <div class="menu-item" onclick="showPage('wishes')"><i class="fas fa-star" style="color:#feca57; font-size:1.8rem;"></i><div>願望</div></div>
             <div class="menu-item" onclick="showPage('improve')"><i class="fas fa-wrench" style="color:#54a0ff; font-size:1.8rem;"></i><div>改善</div></div>
             <div class="menu-item" onclick="showPage('merit')"><i class="fas fa-thumbs-up" style="color:#1dd1a1; font-size:1.8rem;"></i><div>優點</div></div>
         </div>
     </div>
 
-    <div id="sub-page-container" style="display:none; width:100%; max-width:450px;">
-        <div onclick="showPage('home')" style="padding:15px; cursor:pointer; color:#bbb; font-weight:bold;"><i class="fas fa-chevron-left"></i> 返回</div>
-        <h2 id="page-title" style="margin:0 0 10px 15px;"></h2>
+    <div id="sub-page-container" style="display:none; width:90%; max-width:400px; padding:20px;">
+        <div onclick="showPage('home')" style="cursor:pointer; margin-bottom:15px; color:#bbb; font-weight:bold;"><i class="fas fa-chevron-left"></i> 返回</div>
+        <h2 id="page-title" style="margin:0 0 20px 0; text-align: left;"></h2>
         <div id="list-content"></div>
         <button class="fab" onclick="openModal()"><i class="fas fa-plus"></i></button>
     </div>
 </div>
 
+<div id="commentModal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-top:0;">新增回應</h3>
+        <select id="comment-user"><option value="柏鈞">我是 柏鈞</option><option value="偲宸">我是 偲宸</option></select>
+        <input type="text" id="comment-text" placeholder="輸入內容...">
+        <button class="btn-black" onclick="submitComment()">發送留言</button>
+        <button style="width:100%; background:none; border:none; color:#ccc; margin-top:10px;" onclick="closeCommentModal()">取消</button>
+    </div>
+</div>
+
 <div id="inputModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0;">新增紀錄</h3>
-        <select id="input-user" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px;"><option value="柏鈞">柏鈞</option><option value="偲宸">偲宸</option></select>
+        <h3 id="modal-title" style="margin-top:0;">新增紀錄</h3>
+        <select id="input-user"><option value="柏鈞">柏鈞</option><option value="偲宸">偲宸</option></select>
+        <input type="text" id="input-content" placeholder="內容...">
         <div id="memory-fields" style="display:none;">
-            <input type="file" id="input-file" accept="image/*" style="margin-bottom:10px;">
-            <input type="date" id="input-date" style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
-            <textarea id="input-content" placeholder="這張照片的故事..." style="width:100%; height:80px; padding:10px; box-sizing:border-box; border-radius:10px;"></textarea>
+            <input type="file" id="input-file" accept="image/*">
+            <input type="date" id="input-date">
         </div>
-        <div id="card-fields" style="display:none;">
-            <input type="text" id="card-content" placeholder="內容..." style="width:100%; padding:12px; box-sizing:border-box; border-radius:10px; border:1px solid #eee;">
+        <div id="date-fields" style="display:none; text-align: left;">
+            <input type="date" id="input-date-card">
+            <label style="font-size:0.8rem; color:#999;">時間範圍</label>
+            <input type="time" id="input-time" value="09:00">
+            <input type="time" id="input-endtime" value="10:00">
         </div>
-        <button id="submit-btn" class="btn-black" style="margin-top:15px;" onclick="submitData()">發布</button>
+        <button id="submit-btn" class="btn-black" onclick="submitData()">發布到雲端</button>
         <button style="width:100%; background:none; border:none; color:#ccc; margin-top:10px;" onclick="closeModal()">取消</button>
     </div>
 </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHIFk7eE9XDQg-DOyiU5Q62TWt84MnlP590nAT3kGwBydZ7J7PZed6RhOobCAnV7TN/exec";
-    let currentUser = "柏鈞";
+    let currentPage = "";
+    let activeItemId = null;
 
     function init() {
         if (sessionStorage.getItem('isLogged') === 'true') {
             document.getElementById('main-wrapper').style.display = 'flex';
-            currentUser = sessionStorage.getItem('userName') || "柏鈞";
         } else {
             let p = prompt("請輸入密碼。");
             if (p === "0528") { 
-                let name = prompt("妳/你是誰？(輸入: 偲宸 或 柏鈞)");
-                sessionStorage.setItem('isLogged', 'true');
-                sessionStorage.setItem('userName', name || "柏鈞");
-                location.reload();
-            } else location.reload();
+                sessionStorage.setItem('isLogged', 'true'); 
+                document.getElementById('main-wrapper').style.display = 'flex'; 
+            } else { location.reload(); }
         }
         document.getElementById('days-count').innerText = Math.floor((new Date() - new Date(2025, 4, 28)) / 86400000);
     }
@@ -105,50 +129,68 @@
         document.getElementById('home-page').style.display = (id === 'home') ? 'block' : 'none';
         document.getElementById('sub-page-container').style.display = (id === 'home') ? 'none' : 'block';
         if(id !== 'home') {
-            const titles = { reminders:'提醒事項', memories:'回憶錄', food:'喜歡的餐廳', wishes:'願望', improve:'改善', merit:'優點' };
+            const titles = { reminders:'提醒事項', memories:'回憶錄', wishes:'願望', food:'喜歡的餐廳', improve:'改善', merit:'優點' };
             document.getElementById('page-title').innerText = titles[id];
-            loadData();
+            loadData(true);
         }
     }
 
-    async function loadData() {
+    async function loadData(force) {
         const container = document.getElementById('list-content');
-        container.innerHTML = "<p style='text-align:center; color:#ccc; padding-top:50px;'><i class='fas fa-spinner fa-spin'></i> 加載中...</p>";
+        if(force) container.innerHTML = "<p style='text-align:center; color:#ccc; margin-top:50px;'><i class='fas fa-spinner fa-spin'></i> 讀取中...</p>";
         try {
             const res = await fetch(SCRIPT_URL);
-            const allData = await res.json();
-            container.innerHTML = "";
-            const items = (currentPage === 'memories') ? allData.memories : allData.cards.filter(i => i.category === {reminders:'提醒', food:'喜歡的餐廳', wishes:'願望', improve:'改善', merit:'優點'}[currentPage]);
-            
-            items.reverse().forEach(item => {
-                let commentHtml = (item.comments || []).map(c => `<div style="margin-top:4px;"><span class="comment-user">${c.user}</span>${c.text}</div>`).join('');
-                if (currentPage === 'memories') {
-                    container.innerHTML += `
-                        <div class="memory-card">
-                            <div style="padding:12px; font-weight:bold;">${item.user}</div>
-                            <img class="memory-img" src="${item.info}" loading="lazy">
-                            <div class="action-bar">
-                                <i class="fas fa-heart action-btn ${item.likes > 0 ? 'active' : ''}" onclick="handleLike(${item.id})"></i>
-                                <i class="far fa-comment action-btn"></i>
-                            </div>
-                            <div style="padding:0 15px; font-weight:bold; font-size:0.9rem;">${item.likes || 0} 個讚</div>
-                            <div class="comment-section">
-                                <div style="margin-bottom:8px;"><span class="comment-user">${item.user}</span>${item.content}</div>
-                                ${commentHtml}
-                                <div class="comment-input-group">
-                                    <input type="text" id="cmt-${item.id}" class="comment-input" placeholder="新增留言...">
-                                    <button onclick="sendComment(${item.id})" style="border:none; background:none; color:var(--bj-blue); font-weight:bold; padding-left:10px;">發佈</button>
-                                </div>
-                            </div>
-                        </div>`;
-                } else {
-                    container.innerHTML += `<div style="padding:15px; border-bottom:1px solid #f9f9f9;"><b>${item.user}</b>: ${item.content}</div>`;
-                }
-            });
-        } catch(e) { container.innerHTML = "<p style='text-align:center; color:red;'>讀取失敗，請重新整理</p>"; }
+            const data = await res.json();
+            renderList(data);
+        } catch (e) { container.innerHTML = "<p style='color:red;'>讀取失敗</p>"; }
     }
 
-    // 圖片壓縮核心邏輯
+    function renderList(data) {
+        const container = document.getElementById('list-content');
+        container.innerHTML = "";
+        const catMap = { reminders:'提醒', memories:'回憶', wishes:'願望', food:'喜歡的餐廳', improve:'改善', merit:'優點' };
+        
+        const filtered = data.filter(i => i.category === catMap[currentPage]);
+        filtered.reverse().forEach(item => {
+            const isBJ = item.user === '柏鈞';
+            if (currentPage === 'memories') {
+                container.innerHTML += `
+                    <div class="memory-card">
+                        <div style="padding:15px; font-weight:bold;">${item.user}</div>
+                        <div class="img-container"><img class="memory-img" src="${item.info}" onload="this.style.opacity=1" loading="lazy"></div>
+                        <div style="padding:15px;">
+                            <div style="font-weight:700;">${item.content}</div>
+                            <div style="font-size:0.8rem; color:#aaa; margin-top:5px;">${item.date}</div>
+                        </div>
+                        <div style="position:absolute; top:15px; right:15px; color:#eee" onclick="deleteItem(${item.id})"><i class="fas fa-trash-can"></i></div>
+                    </div>`;
+            } else {
+                let card = document.createElement('div');
+                card.className = `list-card ${isBJ ? 'card-bj' : 'card-sc'}`;
+                card.innerHTML = `
+                    <span class="user-tag ${isBJ ? 'tag-bj' : 'tag-sc'}">${item.user}</span>
+                    <div style="font-weight:700; font-size:1.15rem; color:#1a1a1a; text-align:left;">${item.content}</div>
+                    <div style="font-size:0.85rem; color:#aaa; margin-top:8px; text-align:left;">
+                        <i class="far fa-clock"></i> ${item.date} ${item.time || ''}${item.endTime ? ' ~ ' + item.endTime : ''}
+                    </div>
+                    ${currentPage === 'reminders' ? `<div class="cal-link" onclick="addToCalendar('${item.content}','${item.date}','${item.time}','${item.endTime}')"><i class="far fa-calendar-plus"></i> 加入行事曆</div>` : `
+                        <div class="interaction-row">
+                            <div class="interaction-item" onclick="openCommentModal(${item.id})"><i class="far fa-comment"></i> <span>${item.comments ? item.comments.length : 0}</span></div>
+                            <div class="interaction-item" onclick="toggleComments(${item.id})"><i class="fas fa-chevron-down"></i> <span style="font-size:0.85rem;">查看回應</span></div>
+                        </div>
+                        <div class="comment-area" id="comments-${item.id}">
+                            ${(item.comments || []).map(c => `
+                                <div class="thread-msg">
+                                    <div class="thread-avatar">${c.user.charAt(0)}</div>
+                                    <div class="thread-bubble"><b>${c.user}</b> <small style="color:#999;">${c.time}</small><br>${c.text}</div>
+                                </div>`).join('')}
+                        </div>`}
+                    <div style="position:absolute; top:20px; right:20px; color:#eee" onclick="deleteItem(${item.id})"><i class="fas fa-trash-can"></i></div>`;
+                container.appendChild(card);
+            }
+        });
+    }
+
     async function compressImage(file) {
         return new Promise((resolve) => {
             const reader = new FileReader();
@@ -158,15 +200,13 @@
                 img.src = e.target.result;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-                    const max = 800; // 最大邊長 800px，兼顧畫質與速度
-                    if (width > height && width > max) { height *= max / width; width = max; }
-                    else if (height > max) { width *= max / height; height = max; }
-                    canvas.width = width;
-                    canvas.height = height;
-                    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.7)); // 畫質設定 0.7
+                    const max = 600; 
+                    let w = img.width, h = img.height;
+                    if (w > h && w > max) { h *= max/w; w = max; }
+                    else if (h > max) { w *= max/h; h = max; }
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    resolve(canvas.toDataURL('image/jpeg', 0.6)); 
                 };
             };
         });
@@ -174,48 +214,55 @@
 
     async function submitData() {
         const btn = document.getElementById('submit-btn');
-        btn.disabled = true; btn.innerText = "處理中...";
         const user = document.getElementById('input-user').value;
-        const payload = { user, target: (currentPage==='memories'?'memory':'card') };
+        const content = document.getElementById('input-content').value;
+        if(!content) return;
         
+        btn.disabled = true; btn.innerText = "處理中...";
+        const payload = { user, content, category: {reminders:'提醒', memories:'回憶', wishes:'願望', food:'喜歡的餐廳', improve:'改善', merit:'優點'}[currentPage] };
+
         if (currentPage === 'memories') {
             const file = document.getElementById('input-file').files[0];
-            if (!file) { btn.disabled = false; return alert("請選擇照片"); }
+            if (!file) { btn.disabled = false; return alert("請選照片"); }
             payload.photo = await compressImage(file);
-            payload.content = document.getElementById('input-content').value;
             payload.date = document.getElementById('input-date').value;
         } else {
-            payload.category = {reminders:'提醒', food:'喜歡的餐廳', wishes:'願望', improve:'改善', merit:'優點'}[currentPage];
-            payload.content = document.getElementById('card-content').value;
+            payload.date = document.getElementById('input-date-card').value;
+            payload.time = document.getElementById('input-time').value;
+            payload.endTime = document.getElementById('input-endtime').value;
         }
-        await sendPost(payload);
-        btn.disabled = false; btn.innerText = "發布";
+
+        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
+        location.reload();
     }
 
-    async function handleLike(id) {
-        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action:"like", id, target: "memory" }) });
-        loadData();
+    async function deleteItem(id) {
+        if(confirm("確定要刪除嗎？")) {
+            await fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", body:JSON.stringify({action:"delete", id:id})});
+            loadData(true);
+        }
     }
 
-    async function sendComment(id) {
-        const text = document.getElementById(`cmt-${id}`).value;
+    function toggleComments(id) {
+        const el = document.getElementById(`comments-${id}`);
+        el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+    }
+    function openCommentModal(id) { activeItemId = id; document.getElementById('commentModal').style.display='flex'; }
+    function closeCommentModal() { document.getElementById('commentModal').style.display='none'; }
+    async function submitComment() {
+        const text = document.getElementById('comment-text').value;
+        const user = document.getElementById('comment-user').value;
         if(!text) return;
-        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action:"addComment", id, target: "memory", user: currentUser, text }) });
-        loadData();
+        closeCommentModal();
+        await fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", body:JSON.stringify({action:"addComment", id:activeItemId, user:user, text:text})});
+        loadData(false);
     }
-
     function openModal() {
         document.getElementById('inputModal').style.display='flex';
-        document.getElementById('memory-fields').style.display = (currentPage === 'memories') ? 'block' : 'none';
-        document.getElementById('card-fields').style.display = (currentPage !== 'memories') ? 'block' : 'none';
+        document.getElementById('memory-fields').style.display = (currentPage==='memories')?'block':'none';
+        document.getElementById('date-fields').style.display = (currentPage==='memories')?'none':'block';
     }
     function closeModal() { document.getElementById('inputModal').style.display='none'; }
-
-    async function sendPost(data) {
-        closeModal();
-        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
-        setTimeout(loadData, 1500);
-    }
 </script>
 </body>
 </html>
